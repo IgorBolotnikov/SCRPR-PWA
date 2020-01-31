@@ -1,0 +1,6 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Disallow: /admin
+Disallow: /favorites
+
+Sitemap: https://scrpr-project.herokuapp.com/sitemap.xml
