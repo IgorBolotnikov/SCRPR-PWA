@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 export default function Navbar(props) {
   function toggleClassOnTouch() {
@@ -32,16 +33,9 @@ export default function Navbar(props) {
       <input id="toggle" type="checkbox" name="" />
       <div className="navbar">
         <div className="navbar_container">
-          <a className="navbutton logo" href="#">SCRPR</a>
+          <Link className="navbutton logo" to="/">SCRPR</Link>
           <ul className="navbar_list">
-            <li><a className="navbutton" href="#">News</a></li>
-            <li><a className="navbutton first_item" href="#">Games</a></li>
-            <li><a className="navbutton second_item" href="#">Jobs</a></li>
-            <li><a className="navbutton third_item" href="#">Freelance</a></li>
-            {/* <li><a className="navbutton" href="#">My Account</a></li>
-            <li><a className="navbutton" href="#">Log Out</a></li> */}
-            <li><a className="navbutton" href="#">Log In</a></li>
-            <li><a className="navbutton" href="#">Register</a></li>
+            {props.children}
           </ul>
         </div>
       </div>

@@ -1478,6 +1478,7 @@ input, textarea, select, option {
 
   .wide_section {
     width: 100vw;
+    margin-left: calc(512px - 50vw);
   }
 
   .save_to_favorites_button {
