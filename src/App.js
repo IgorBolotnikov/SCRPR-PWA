@@ -1,10 +1,17 @@
 import React from 'react';
+// Pages
+import IndexPage from './pages/indexPage';
+// Components
+import Navbar from './components/navbar';
+import Footer from './components/footer';
 
 function App() {
   return (
-    <div className="App">
-      <h1>Hello, World!</h1>
-    </div>
+    <React.Fragment>
+      <Navbar />
+      <IndexPage />
+      <Footer />
+    </React.Fragment>
   );
 }
 
