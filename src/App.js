@@ -17,7 +17,7 @@ import Navbar from './components/navbar';
 import Footer from './components/footer';
 
 // Change this URL if API is relocated
-export const API_URL = 'https://scrpr-project.herokuapp.com/api/v1';
+export const API_URL = 'https://scrpr-develop.herokuapp.com/api/v1';
 
 function App() {
   return (
