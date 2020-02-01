@@ -12,6 +12,7 @@ import NewsPage from './pages/newsPage';
 import AboutPage from './pages/aboutPage';
 import RatePage from './pages/ratePage';
 import JobsPage from './pages/jobsPage';
+import GamesPage from './pages/gamesPage';
 // Components
 import Navbar from './components/navbar';
 import Footer from './components/footer';
@@ -44,7 +45,7 @@ function App() {
             <JobsPage />
           </Route>
           <Route path="/games">
-            <IndexPage />
+            <GamesPage />
           </Route>
           <Route path="/freelance">
             <IndexPage />

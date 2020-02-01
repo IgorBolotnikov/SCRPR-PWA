@@ -36,7 +36,7 @@ const citiesOptions = [
   },
 ]
 
-const JOBS_URL = "/jobs?"
+const JOBS_URL = "/jobs?";
 
 export default function JobsPage(props) {
   let [loading, setLoading] = useState({value: true});
@@ -65,7 +65,7 @@ export default function JobsPage(props) {
     if (withSalary.value) {
       params.with_salary = withSalary.value;
     }
-    if (page.value) {
+    if (page.value && page.value !== 1) {
       params.page = page.value;
     }
     var esc = encodeURIComponent;
@@ -77,14 +77,12 @@ export default function JobsPage(props) {
   function fetchJobs() {
     const URL = API_URL + JOBS_URL + getQueryString();
     setLoading({value: true});
-    console.log(URL);
     fetch(URL, { headers: {
       'Content-Type': 'application/json',
     }})
       .then(response => response.json())
       .then(data => {
         setJobs(data || {pagination: {}, results: []});
-        console.log(data.pagination)
         setLoading({value: false});
       })
   }

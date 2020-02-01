@@ -38,6 +38,7 @@ export function SearchBarGames(props) {
         maxLength="100"
         id={props.id}
         value={props.value}
+        onChange={props.onChange}
       />
       <input type="submit" className="search_button" value="" />
     </div>
