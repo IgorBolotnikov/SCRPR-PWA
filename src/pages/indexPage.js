@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 // Images
 import GamesImage from './../Img/Icons/games.png';
 import JobsImage from './../Img/Icons/jobs.png';
@@ -18,7 +19,7 @@ export default function IndexPage(props) {
             <li className="features_item">
               <figure className="figure_one">
                 <img src={GamesImage} height="100px" width="100px" alt="Games" />
-                <figcaption><a className="first_item" href="#">PS4 game prices</a></figcaption>
+                <figcaption><Link className="first_item" to="/games">PS4 game prices</Link></figcaption>
               </figure>
               <ul className="websites_list">
                 <li className="websites_list_item">store.playstation.com</li>
@@ -26,7 +27,7 @@ export default function IndexPage(props) {
             </li>
             <li className="features_item"><figure className="figure_two">
               <img src={JobsImage} height="100px" width="100px" alt="Jobs" />
-              <figcaption><a className="second_item" href="#">Job offers</a></figcaption>
+              <figcaption><Link className="second_item" to="/jobs">Job offers</Link></figcaption>
             </figure>
               <ul className="websites_list">
                 <li className="websites_list_item">www.hh.ua</li>
@@ -41,7 +42,7 @@ export default function IndexPage(props) {
             </li>
             <li className="features_item"><figure className="figure_three">
               <img src={FreelanceImage} height="100px" width="100px" alt="Freelance" />
-              <figcaption><a className="third_item" href="#">Freelance job offers</a></figcaption></figure>
+              <figcaption><Link className="third_item" to="/">Freelance job offers</Link></figcaption></figure>
               <ul className="websites_list">
                 <li className="websites_list_item">- IN PROGRESS -</li>
               </ul>

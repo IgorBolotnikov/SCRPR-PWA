@@ -7,72 +7,7 @@ import {
   NumericFilterField,
   FiltersList
 } from './../components/searchBar';
-
-const jobsSample = {
-  pagination: {
-    page: 1,
-    prev_page: null,
-    next_page: 2,
-    last_page: 2225
-  },
-  results: [
-    {
-      title: "Оператор чата",
-      body: "Хотите работать в сфере IT, но нет опыта? - Опыт работы не имеет значения, знание английского, и других иностранных языков приветствуется. - \nконсультация пользователей. - ведение деловой переписки. - работа с Work и Exсel.",
-      location: "",
-      salary_min: null,
-      salary_max: 1000,
-      currency: "USD",
-      employer: "WiFiMap",
-      link: "https://hh.ua/vacancy/35612619",
-      source: "https://hh.ua"
-    },
-    {
-      title: "Адміністратор інтернет-магазину",
-      body: "Грамотність в писемному та усному мовленні українською та/або російською. Бажано досвід управління/керівництва (не принципово). Наявність СМАРТФОНУ та/або...\nОрганізація клієнтської бази і товарообігу в інтернет-магазині. Ведення робочого акаунту в соцмережі. Відповіді на вхідні дзвінки та електронну пошту. ",
-      location: "",
-      salary_min: 5000,
-      salary_max: 10000,
-      currency: "UAH",
-      employer: "Касиян Р.В.",
-      link: "https://hh.ua/vacancy/35244072",
-      source: "https://hh.ua"
-    },
-    {
-      title: "Тайный покупатель",
-      body: "Наличие звукозаписывающего устройства (телефон или диктофон). Наличие доступа в интернет. Высокий уровень ответственности. Быстрая обучаемость.\nОценка качества обслуживания сотрудников магазинов, ресторанов, кафетериев, супермаркетов, АЗС и др. Заполнение отчетной анкеты в электронном виде (не позднее следующего...",
-      location: "",
-      salary_min: null,
-      salary_max: 9000,
-      currency: "UAH",
-      employer: "Mystery Fox",
-      link: "https://hh.ua/vacancy/35420918",
-      source: "https://hh.ua"
-    },
-    {
-      title: "3D-визуализатор",
-      body: "Обучаемость. Желание работать и зарабатывать. Владение 3Ds Max или другим пакетом 3D графики. Photoshop. Навыки архитектурного моделирования.\nСоздание 3D моделей архитектурных форм, предметов мебели. Настройка материалов света и камер. Постобработка. Прохождения дополнительного обучения.",
-      location: "",
-      salary_min: null,
-      salary_max: 10000,
-      currency: "UAH",
-      employer: "ДМ Интериорс",
-      link: "https://hh.ua/vacancy/35449044",
-      source: "https://hh.ua"
-    },
-    {
-      title: "Территориальный менеджер",
-      body: "Опыт работы на аналогичной должности от 2 лет, в сфере (одежда, обувь, электроника, косметика). Образование высшее, предпочтительно менеджмент, экономика, финансы. \nОперационное управление группой магазинов. Обеспечение выполнения плановых показателей. Контроль выполнения стандартов компании. Посещение вверенной территории согласно графику. Подбор и адаптация...",
-      location: "",
-      salary_min: null,
-      salary_max: 100000,
-      currency: "RUR",
-      employer: "ZENDEN",
-      link: "https://hh.ua/vacancy/35610513",
-      source: "https://hh.ua"
-    }
-  ]
-}
+import Pagination from './../components/pagination';
 
 const citiesOptions = [
   {
@@ -104,23 +39,58 @@ const citiesOptions = [
 const JOBS_URL = "/jobs?"
 
 export default function JobsPage(props) {
-  let [jobs, setJobs] = useState({paginaiton: {}, results: []});
+  let [loading, setLoading] = useState({value: true});
+  let [jobs, setJobs] = useState({pagination: {}, results: []});
   let [title, setTitle] = useState({value: ""});
   let [city, setCity] = useState({value: ""});
   let [salaryMin, setSalaryMin] = useState({value: 0.00});
   let [salaryMax, setSalaryMax] = useState({value: 0.00});
   let [withSalary, setWithSalary] = useState({value: false});
+  let [page, setPage] = useState({value: 1});
 
-  function fetchGames() {
+  function getQueryString() {
+    var params = {};
+    if (title.value) {
+      params.title = title.value;
+    }
+    if (city.value) {
+      params.location = city.value;
+    }
+    if (salaryMin.value > 0.00) {
+      params.salary_min = salaryMin.value;
+    }
+    if (salaryMax.value > 0.00) {
+      params.salary_max = salaryMax.value;
+    }
+    if (withSalary.value) {
+      params.with_salary = withSalary.value;
+    }
+    if (page.value) {
+      params.page = page.value;
+    }
+    var esc = encodeURIComponent;
+    return Object.keys(params)
+      .map(key => esc(key) + '=' + esc(params[key]))
+      .join('&');
+  }
+
+  function fetchJobs() {
     const URL = API_URL + JOBS_URL + getQueryString();
+    setLoading({value: true});
+    console.log(URL);
     fetch(URL, { headers: {
       'Content-Type': 'application/json',
-      'Origin': 'API_URL'
     }})
       .then(response => response.json())
       .then(data => {
-        setJobs(data || jobsSample);
+        setJobs(data || {pagination: {}, results: []});
+        console.log(data.pagination)
+        setLoading({value: false});
       })
+  }
+
+  function handleDiffPage(event) {
+    setPage({value: event.target.value});
   }
 
   function handleTitleChange(event) {
@@ -143,36 +113,12 @@ export default function JobsPage(props) {
     setWithSalary({value: !withSalary.value});
   }
 
-  function getQueryString() {
-    var params = {};
-    if (title.value) {
-      params.title = title.value;
-    }
-    if (salaryMin.value > 0.00) {
-      params.salary_min = salaryMin.value;
-    }
-    if (salaryMax.value > 0.00) {
-      params.salary_max = salaryMax.value;
-    }
-    if (withSalary.value) {
-      params.with_salary = withSalary.value;
-    }
-
-    var esc = encodeURIComponent;
-    return Object.keys(params)
-      .map(key => esc(key) + '=' + esc(params[key]))
-      .join('&');
-  }
-
   function handleSubmit(event) {
-    event.preventDDefault();
-    fetchGames();
+    event.preventDefault();
+    fetchJobs();
   }
 
-  useEffect(
-    () => {
-      fetchGames();
-    }, []);
+  useEffect(() => fetchJobs(), [page.value]);
 
   return (
     <React.Fragment>
@@ -189,6 +135,7 @@ export default function JobsPage(props) {
           </div>
           <FiltersTabJobs
             cities={citiesOptions}
+            city={city.value}
             onCityChange={handleCityChange}
           >
             <NumericFilterField
@@ -216,13 +163,32 @@ export default function JobsPage(props) {
       </div>
 
       <div className="results_container">
+        {loading.value ? (
+          <div className="lds-dual-ring"></div>
+        ) : (
+          ""
+        )}
         {jobs.results.length > 0 ? (
-          <ul  className="window results_list_jobs">
+          <ul className={loading.value ? (
+              "window results_list_jobs loading"
+          ) : (
+              "window results_list_jobs"
+          )}>
             {jobs.results.map(result => <JobCard result={result} key={result.link}/>)}
           </ul>
         ) : (
           <h1 className="no_results">No results :(</h1>
         )}
+
+        {jobs.pagination.last_page !== 1 ? (
+          <Pagination
+            page={jobs.pagination.page}
+            prevPage={jobs.pagination.prev_page}
+            nextPage={jobs.pagination.next_page}
+            lastPage={jobs.pagination.last_page}
+            onPageChange={handleDiffPage}
+          />
+        ) : ("")}
       </div>
     </React.Fragment>
   );
@@ -230,7 +196,10 @@ export default function JobsPage(props) {
 }
 
 function JobCard(props) {
-  let salaryLine = props.result.salary_max + " " + props.result.currency;
+  let salaryLine = "";
+  if (props.result.salary_max) {
+    salaryLine = props.result.salary_max + " " + props.result.currency;
+  }
   if (props.result.salary_min) {
     salaryLine = props.result.salary_min + " – " + salaryLine;
   }
@@ -238,11 +207,11 @@ function JobCard(props) {
   return (
     <li className="list_item">
       <div>
-        <a className="list_link" href={props.result.source} target="_blank">From {props.result.source}</a>
+        <a className="list_link" href={props.result.source} target="_blank" rel="noopener noreferrer">From {props.result.source}</a>
       </div>
       <div className="list_item_header">
         <div className="header_container">
-          <a  className="list_link list_header" href={props.result.link} target="_blank">{props.result.title}</a>
+          <a  className="list_link list_header" href={props.result.link} target="_blank" rel="noopener noreferrer">{props.result.title}</a>
         </div>
         <span className="list_salary">{salaryLine}</span>
       </div>
@@ -278,7 +247,7 @@ function FiltersTabJobs(props) {
         name="city"
         className="field city_filter city_separate"
         id="id_city"
-        value={props.cities[0].value}
+        value={props.city}
         onChange={props.onCityChange}
       >
         {props.cities.map(city => (

@@ -280,28 +280,40 @@ input, textarea, select, option {
 
 .pagination_current_page {
   display: inline-block;
+  min-width: calc(34px - 1em);
   padding: .5em;
   line-height: 1;
   border: 1px solid #cccccc;
   background-color: white;
+  margin: 0px 5px;
+  text-align: center;
 }
 
 .pagination_button {
+  height: 34px;
+  min-width: 34px;
   display: inline-block;
   border: 1px solid #ff4d4d;
   padding: .5em;
-  width: 1.5em;
+  margin: 0px 5px;
   line-height: 1;
   color: #ff4d4d;
   background-color: white;
   transition-property: background-color, color;
   transition-duration: 0.2s, 0.2s;
   text-align: center;
+  font-size: 16px;
 }
 
 .pagination_button:hover {
   background-color: #ff4d4d;
   color: white;
+  cursor: pointer;
+}
+
+.step-links {
+  display: flex;
+  flex-direction: row;
 }
 
 .filter_item {
@@ -1639,4 +1651,39 @@ input, textarea, select, option {
   margin: 0px;
   padding: 0px;
   border-bottom-width: 0px;
+}
+
+/* Loader */
+
+.lds-dual-ring {
+  z-index: 1000;
+  position: relative;
+  top: calc(50vh - 138px);
+  left: calc(50% - 48px);
+  display: inline-block;
+  width: 0px;
+  height: 0px;
+}
+.lds-dual-ring:after {
+  content: " ";
+  display: block;
+  width: 64px;
+  height: 64px;
+  margin: 8px;
+  border-radius: 50%;
+  border: 6px solid #ff4d4d;
+  border-color: #ff4d4d transparent #ff4d4d transparent;
+  animation: lds-dual-ring 1.2s linear infinite;
+}
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loading {
+  opacity: 0.5;
 }
