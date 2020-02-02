@@ -53,7 +53,7 @@ export default function GamesPage(props) {
 
   function fetchGames() {
     const URL = API_URL + GAMES_URL + getQueryString();
-    console.log(URL);
+    window.scrollTo(0, 0);
     setLoading({value: true});
     fetch(URL, { headers: {
       'Content-Type': 'application/json',
@@ -211,10 +211,10 @@ function GameCard(props) {
 
 function FiltersTabGames(props) {
   const filtersHeader = "Prices";
-  let [opened, setOpened] = useState({value: false});
 
-  function openFilters(event) {
-    setOpened({value: !opened});
+  function toggleFilters(event) {
+    const filtersList = document.getElementById('filters_list');
+    filtersList.classList.toggle("filters_open");
   }
 
   return (
@@ -224,7 +224,7 @@ function FiltersTabGames(props) {
         type="button"
         name="button"
         className="big_button"
-        onClick={openFilters}
+        onClick={toggleFilters}
       >Filters</button>
       <FiltersList header={filtersHeader}>
         {props.children}

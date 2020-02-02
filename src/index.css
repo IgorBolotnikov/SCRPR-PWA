@@ -183,7 +183,7 @@ input, textarea, select, option {
   transition: background-color 0.2s;
 }
 
-.navbutton:hover {
+.navbutton:active {
   background-color: white;
   color: #ff4d4d;
 }
@@ -248,7 +248,7 @@ input, textarea, select, option {
   transition: color 0.1s;
 }
 
-.footer_list_item:hover {
+.footer_list_item:active {
   color: #ff4d4d;
 }
 
@@ -305,7 +305,7 @@ input, textarea, select, option {
   font-size: 16px;
 }
 
-.pagination_button:hover {
+.pagination_button:active {
   background-color: #ff4d4d;
   color: white;
   cursor: pointer;
@@ -393,7 +393,7 @@ input, textarea, select, option {
   transition-duration: 0.2s, 0.2s;
 }
 
-.big_button:hover, .small_button:hover {
+.big_button:active, .small_button:active {
   cursor: pointer;
   background-color: #ff4d4d;
   color: white;
@@ -723,7 +723,7 @@ input, textarea, select, option {
   transition: 0.2s, 0.2s;
 }
 
-.search_button:hover {
+.search_button:active {
   background-color: #ff4d4d;
   border-color: #ff4d4d;
 }
@@ -774,7 +774,7 @@ input, textarea, select, option {
   transition: color 0.2s;
 }
 
-.list_link:hover {
+.list_link:active {
   color: black;
 }
 
@@ -791,7 +791,7 @@ input, textarea, select, option {
   transition: color 0.2s;
 }
 
-.list_header:hover {
+.list_header:active {
   color: #1a1aff;
 }
 
@@ -898,7 +898,7 @@ input, textarea, select, option {
   transition: box-shadow 0.2s;
 }
 
-.list_link_gamebox:hover {
+.list_link_gamebox:active {
   box-shadow: #ff4d4d 0px 0px 10px;
 }
 
@@ -1058,10 +1058,6 @@ input, textarea, select, option {
 
 .auth_link {
   color: black;
-  transition: color .2s;
-}
-
-.auth_link:hover {
   color: #ff4d4d;
 }
 
@@ -1200,7 +1196,7 @@ input, textarea, select, option {
   transition: background-color 0.2s;
 }
 
-.favorites_list_item:hover {
+.favorites_list_item:active {
   background-color: #eeeeee;
 }
 
@@ -1415,6 +1411,48 @@ input, textarea, select, option {
 }
 
 @media (min-width: 800px) {
+
+  .favorites_list_item:hover {
+    background-color: #eeeeee;
+  }
+
+  .list_link_gamebox:hover {
+    box-shadow: #ff4d4d 0px 0px 10px;
+  }
+
+  .list_header:hover {
+    color: #1a1aff;
+  }
+
+  .list_link:hover {
+    color: black;
+  }
+
+  .search_button:hover {
+    background-color: #ff4d4d;
+    border-color: #ff4d4d;
+  }
+
+  .big_button:hover, .small_button:hover {
+    cursor: pointer;
+    background-color: #ff4d4d;
+    color: white;
+  }
+
+  .pagination_button:hover {
+    background-color: #ff4d4d;
+    color: white;
+    cursor: pointer;
+  }
+
+  .footer_list_item:hover {
+    color: #ff4d4d;
+  }
+
+  .navbutton:hover {
+    background-color: white;
+    color: #ff4d4d;
+  }
 
   #filters_button {
     display: inline-block;

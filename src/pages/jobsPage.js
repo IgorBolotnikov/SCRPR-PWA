@@ -76,6 +76,7 @@ export default function JobsPage(props) {
 
   function fetchJobs() {
     const URL = API_URL + JOBS_URL + getQueryString();
+    window.scrollTo(0, 0);
     setLoading({value: true});
     fetch(URL, { headers: {
       'Content-Type': 'application/json',
@@ -226,10 +227,10 @@ function JobCard(props) {
 
 function FiltersTabJobs(props) {
   const filtersHeader = "Salary";
-  let [opened, setOpened] = useState({value: false});
 
-  function openFilters(event) {
-    setOpened({value: !opened});
+  function toggleFilters(event) {
+    const filtersList = document.getElementById('filters_list');
+    filtersList.classList.toggle("filters_open");
   }
 
   return (
@@ -239,7 +240,7 @@ function FiltersTabJobs(props) {
         type="button"
         name="button"
         className="big_button"
-        onClick={openFilters}
+        onClick={toggleFilters}
       >Filters</button>
       <select
         name="city"

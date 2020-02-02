@@ -2,22 +2,33 @@ import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 export default function Navbar(props) {
-  function toggleClassOnTouch() {
+  function toggleClass() {
+    console.log(this);
     this.classList.toggle("change");
   }
 
-  function toggleClassOnClick() {
-    this.classList.toggle("change");
+  function toggleBurgerClass() {
+    const burger = document.getElementById('burger_click');
+    const toggle = document.getElementById('toggle');
+    burger.classList.toggle("change");
+    toggle.checked = !toggle.checked;
+    window.scrollTo(0, 0);
   }
 
   useEffect(() => {
-    const burger = document.getElementById('burger_touch');
-    const burger2 = document.getElementById('burger_click');
-    burger.addEventListener('touchend', toggleClassOnTouch);
-    burger2.addEventListener('click', toggleClassOnClick);
+    const burger = document.getElementById('burger_click');
+    const navbar = document.getElementsByClassName('navbar_list')[0].children;
+    // burger.addEventListener('touchend', toggleClass);
+    burger.addEventListener('click', toggleClass);
+    for (let child of navbar) {
+      child.children[0].addEventListener('touchend', toggleBurgerClass);
+    }
     return () => {
-      burger.removeEventListener('touchend', toggleClassOnTouch);
-      burger2.removeEventListener('click', toggleClassOnClick);
+      // burger.removeEventListener('touchend', toggleClass);
+      burger.removeEventListener('click', toggleClass);
+      for (let child of navbar) {
+        child.children[0].removeEventListener('touchend', toggleBurgerClass);
+      }
     }
   }, []);
 
