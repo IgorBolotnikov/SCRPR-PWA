@@ -21,13 +21,13 @@ export default function Navbar(props) {
     // burger.addEventListener('touchend', toggleClass);
     burger.addEventListener('click', toggleClass);
     for (let child of navbar) {
-      child.children[0].addEventListener('touchend', toggleBurgerClass);
+      child.children[0].addEventListener('click', toggleBurgerClass);
     }
     return () => {
       // burger.removeEventListener('touchend', toggleClass);
       burger.removeEventListener('click', toggleClass);
       for (let child of navbar) {
-        child.children[0].removeEventListener('touchend', toggleBurgerClass);
+        child.children[0].removeEventListener('click', toggleBurgerClass);
       }
     }
   }, []);
