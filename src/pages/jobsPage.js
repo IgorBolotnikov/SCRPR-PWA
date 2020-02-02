@@ -117,7 +117,10 @@ export default function JobsPage(props) {
     fetchJobs();
   }
 
-  useEffect(() => fetchJobs(), [page.value]);
+  useEffect(() => {
+    fetchJobs();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page.value]);
 
   return (
     <React.Fragment>

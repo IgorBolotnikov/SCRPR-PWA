@@ -98,7 +98,10 @@ export default function GamesPage(props) {
     fetchGames();
   }
 
-  useEffect(() => fetchGames(), [page.value]);
+  useEffect(() => {
+    fetchGames();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page.value]);
 
   return (
     <React.Fragment>

@@ -8,11 +8,13 @@ export default function Navbar(props) {
   }
 
   function toggleBurgerClass() {
-    const burger = document.getElementById('burger_click');
-    const toggle = document.getElementById('toggle');
-    burger.classList.toggle("change");
-    toggle.checked = !toggle.checked;
-    window.scrollTo(0, 0);
+    if (window.innerWidth < 800) {
+      const burger = document.getElementById('burger_click');
+      const toggle = document.getElementById('toggle');
+      burger.classList.toggle("change");
+      toggle.checked = !toggle.checked;
+      window.scrollTo(0, 0);
+    }
   }
 
   useEffect(() => {
