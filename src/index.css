@@ -1696,7 +1696,7 @@ input, textarea, select, option {
 .lds-dual-ring {
   z-index: 1000;
   position: relative;
-  top: calc(50vh - 138px);
+  top: calc(100px);
   left: calc(50% - 48px);
   display: inline-block;
   width: 0px;
@@ -1707,7 +1707,7 @@ input, textarea, select, option {
   display: block;
   width: 64px;
   height: 64px;
-  margin: 8px;
+  margin: 6px;
   border-radius: 50%;
   border: 6px solid #ff4d4d;
   border-color: #ff4d4d transparent #ff4d4d transparent;

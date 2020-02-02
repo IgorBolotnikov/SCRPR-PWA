@@ -175,11 +175,8 @@ export default function JobsPage(props) {
           )}>
             {jobs.results.map(result => <JobCard result={result} key={result.link}/>)}
           </ul>
-        ) : (
-          <h1 className="no_results">No results :(</h1>
-        )}
-
-        {jobs.pagination.last_page !== 1 ? (
+        ) : (loading.value ? ("") : (<h1 className="no_results">No results :(</h1>))}
+        {jobs.pagination.last_page && jobs.pagination.last_page !== 1 ? (
           <Pagination
             page={jobs.pagination.page}
             prevPage={jobs.pagination.prev_page}

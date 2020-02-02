@@ -164,11 +164,9 @@ export default function GamesPage(props) {
           )}>
             {games.results.map(result => <GameCard result={result} key={result.link}/>)}
           </ul>
-        ) : (
-          <h1 className="no_results">No results :(</h1>
-        )}
+        ) : (loading.value ? ("") : (<h1 className="no_results">No results :(</h1>))}
 
-        {games.pagination.last_page !== 1 ? (
+        {games.pagination.last_page && games.pagination.last_page !== 1 ? (
           <Pagination
             page={games.pagination.page}
             prevPage={games.pagination.prev_page}
