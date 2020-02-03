@@ -37,7 +37,7 @@ export default function GamesPage(props) {
       params.psplus_price = PSPlusPrice.value;
     }
     if (discountPrice.value) {
-      params.init_price = discountPrice.value;
+      params.initial_price = discountPrice.value;
     }
     if (free.value) {
       params.free = free.value;
@@ -53,6 +53,7 @@ export default function GamesPage(props) {
 
   function fetchGames() {
     const URL = API_URL + GAMES_URL + getQueryString();
+    console.log(URL);
     window.scrollTo(0, 0);
     setLoading({value: true});
     fetch(URL, { headers: {
@@ -90,7 +91,7 @@ export default function GamesPage(props) {
   }
 
   function handleFreeChange(event) {
-    setFree({value: !free});
+    setFree({value: !free.value});
   }
 
   function handleSubmit(event) {
@@ -192,13 +193,13 @@ function GameCard(props) {
         </div>
         <div className="description_container_games">
           <div className="list_header_games">{props.result.title}</div>
-          {props.result.initial_price ? (
+          {props.result.initial_price !== null ? (
             <div className="list_price strikethrough">{props.result.initial_price} UAH</div>
           ) : ("")}
           {props.result.price !==0 ? (
             <div className="list_price">{props.result.price} UAH</div>
           ) : ("")}
-          {props.result.psplus_price ? (props.result.psplus_price === 0 ? (
+          {props.result.psplus_price !== null ? (props.result.psplus_price === 0 ? (
             <div className="list_price psplus_price">PS Plus FREE</div>
           ) : (
             <div className="list_price psplus_price">PS Plus {props.result.psplus_price} UAH</div>

@@ -76,6 +76,7 @@ export default function JobsPage(props) {
 
   function fetchJobs() {
     const URL = API_URL + JOBS_URL + getQueryString();
+    console.log(URL);
     window.scrollTo(0, 0);
     setLoading({value: true});
     fetch(URL, { headers: {
