@@ -13,6 +13,7 @@ import AboutPage from './pages/aboutPage';
 import RatePage from './pages/ratePage';
 import JobsPage from './pages/jobsPage';
 import GamesPage from './pages/gamesPage';
+import LoginPage from './pages/loginPage';
 // Components
 import Navbar from './components/navbar';
 import Footer from './components/footer';
@@ -51,7 +52,7 @@ function App() {
             <IndexPage />
           </Route>
           <Route path="/auth/login">
-            <IndexPage />
+            <LoginPage />
           </Route>
           <Route path="/auth/register">
             <IndexPage />
