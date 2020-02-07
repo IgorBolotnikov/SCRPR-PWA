@@ -1,4 +1,9 @@
 import React, { useState } from 'react';
+import {
+  AuthField,
+  AuthWindow,
+  AuthButton
+} from './../components/authForms';
 
 export default function LoginPage(props) {
   let [username, setUsername] = useState({value: ""});
@@ -18,37 +23,25 @@ export default function LoginPage(props) {
   }
 
   return (
-    <div className="auth_container window">
-      <h1 className="auth_header">Log In</h1>
-      <p className="auth_note">
-        This is a universal login page.
-        <br/>
-        A single account for all my projects.
-      </p>
+    <AuthWindow
+      header="Log In"
+      note="This is a universal login page.<br/>A single account for all my projects."
+    >
       <form className="auth_form" method="POST" onSubmit={handleSubmit}>
-        <input
+        <AuthField
           type="text"
           name="username"
-          className="auth_field field"
           placeholder="Username"
-          required id="id_username"
           onChange={handleUsernameChange}
           value={username.value}
         />
-        <input
+        <AuthField
           type="password"
-          name="password"
-          className="auth_field field"
           placeholder="Password"
-          required id="id_password"
           onChange={handlePasswordChange}
           value={password.value}
         />
-        <input
-          className="auth_button big_button"
-          type="submit"
-          value="CONFIRM"
-        />
+        <AuthButton value="CONFIRM" />
         <a
           className="login_redirect auth_link"
           href="/auth/reset_password"
@@ -56,6 +49,6 @@ export default function LoginPage(props) {
           Forgot your password?
         </a>
       </form>
-    </div>
+    </AuthWindow>
   );
 }

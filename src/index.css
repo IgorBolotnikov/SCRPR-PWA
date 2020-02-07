@@ -1041,11 +1041,12 @@ input, textarea, select, option {
 }
 
 .auth_redirect {
-  padding-left: 1em;
+  padding-left: 0.5em;
   display: inline-block;
   text-align: center;
   vertical-align: middle;
   color: grey;
+  word-wrap: break-word;
 }
 
 .login_redirect {
@@ -1724,4 +1725,13 @@ input, textarea, select, option {
 
 .loading {
   opacity: 0.5;
+}
+
+@media (max-width: 360px) {
+  .auth_redirect {
+    display: block;
+    padding-left: 0px;
+    padding-top: 15px;
+    margin: auto;
+  }
 }

@@ -11,8 +11,8 @@ export default function Navbar(props) {
     if (window.innerWidth < 800) {
       const burger = document.getElementById('burger_click');
       const toggle = document.getElementById('toggle');
-      burger.classList.toggle("change");
-      toggle.checked = !toggle.checked;
+      burger.classList.remove("change");
+      toggle.checked = false;
       window.scrollTo(0, 0);
     }
   }
@@ -20,14 +20,17 @@ export default function Navbar(props) {
   useEffect(() => {
     const burger = document.getElementById('burger_click');
     const navbar = document.getElementsByClassName('navbar_list')[0].children;
+    const logo = document.getElementById('logo');
     // burger.addEventListener('touchend', toggleClass);
     burger.addEventListener('click', toggleClass);
+    logo.addEventListener('click', toggleBurgerClass);
     for (let child of navbar) {
       child.children[0].addEventListener('click', toggleBurgerClass);
     }
     return () => {
       // burger.removeEventListener('touchend', toggleClass);
       burger.removeEventListener('click', toggleClass);
+      logo.removeEventListener('click', toggleBurgerClass);
       for (let child of navbar) {
         child.children[0].removeEventListener('click', toggleBurgerClass);
       }
@@ -46,7 +49,7 @@ export default function Navbar(props) {
       <input id="toggle" type="checkbox" name="" />
       <div className="navbar">
         <div className="navbar_container">
-          <Link className="navbutton logo" to="/">SCRPR</Link>
+          <Link className="navbutton logo" id="logo" to="/">SCRPR</Link>
           <ul className="navbar_list">
             {props.children}
           </ul>

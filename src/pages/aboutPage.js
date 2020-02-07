@@ -2,10 +2,10 @@ import React from 'react';
 
 export default function AboutPage(props) {
   return (
-    <div class="window about_container">
-      <h1 class="about_header">About</h1>
-      <main class="about_body">
-        <h2 class="text_header">A little background</h2>
+    <div className="window about_container">
+      <h1 className="about_header">About</h1>
+      <main className="about_body">
+        <h2 className="text_header">A little background</h2>
         <p>This project is a part of my Flask self-learning.
           I've started working on it on July 27, 2019 not knowing
           anything about Flask and some distant understanding
@@ -17,7 +17,7 @@ export default function AboutPage(props) {
         the whole thing?"</p>
         <p>This project is still (and indefinitly, I think)
         in the state of constant tweaking and refinement.</p>
-        <h2 class="text_header">What is it anyway?</h2>
+        <h2 className="text_header">What is it anyway?</h2>
         <p>This is me being lazy and feeling for all those
         people who can't stand doing repeating shuff. No, seriously.</p>
         <p>This website helps people automate searching and monitoring
