@@ -30,6 +30,11 @@ input, textarea, select, option {
   appearance: none;
 }
 
+.text_success {
+  text-align: center;
+  color: rgb(1, 150, 1);
+}
+
 ::selection {
   background-color: #ff4d4d;
   color: white;
@@ -748,6 +753,7 @@ input, textarea, select, option {
 .results_container {
   display: block;
   margin: 0px 15px;
+  min-height: 250px;
 }
 
 .results_list_jobs {
@@ -1699,7 +1705,7 @@ input, textarea, select, option {
   position: relative;
   top: calc(100px);
   left: calc(50% - 48px);
-  display: inline-block;
+  display: block;
   width: 0px;
   height: 0px;
 }

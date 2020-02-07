@@ -44,7 +44,7 @@ export default function LoginPage(props) {
         <AuthButton value="CONFIRM" />
         <a
           className="login_redirect auth_link"
-          href="/auth/reset_password"
+          href="/auth/reset-password"
         >
           Forgot your password?
         </a>

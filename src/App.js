@@ -15,6 +15,8 @@ import JobsPage from './pages/jobsPage';
 import GamesPage from './pages/gamesPage';
 import LoginPage from './pages/loginPage';
 import RegisterPage from './pages/registerPage';
+import ResetRequest from './pages/passwordReset/resetRequest';
+import ResetPassword from './pages/passwordReset/resetPassword';
 
 import NoMatchesPage from './pages/noMatchesPage';
 // Components
@@ -59,6 +61,12 @@ function App() {
           </Route>
           <Route path="/auth/register">
             <RegisterPage />
+          </Route>
+          <Route path="/auth/reset-password" exact>
+            <ResetRequest />
+          </Route>
+          <Route path="/auth/reset-password/:uidb64/:token">
+            <ResetPassword />
           </Route>
           <Route path="/about">
             <AboutPage />
