@@ -17,6 +17,8 @@ import LoginPage from './pages/loginPage';
 import RegisterPage from './pages/registerPage';
 import ResetRequest from './pages/passwordReset/resetRequest';
 import ResetPassword from './pages/passwordReset/resetPassword';
+import FavoritesPage from './pages/favoritesPage';
+import EditAccountPage from './pages/editAccountPage';
 
 import NoMatchesPage from './pages/noMatchesPage';
 // Components
@@ -68,11 +70,17 @@ function App() {
           <Route path="/auth/reset-password/:uidb64/:token">
             <ResetPassword />
           </Route>
+          <Route path="/auth/edit-account">
+            <EditAccountPage />
+          </Route>
           <Route path="/about">
             <AboutPage />
           </Route>
           <Route path="/rate">
             <RatePage />
+          </Route>
+          <Route path="/favorites">
+            <FavoritesPage />
           </Route>
           <Route path="*">
             <NoMatchesPage />

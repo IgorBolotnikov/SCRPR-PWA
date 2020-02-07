@@ -1068,6 +1068,67 @@ input, textarea, select, option {
   color: #ff4d4d;
 }
 
+.account_image_label {
+  height: 17px;
+  display: block;
+  text-align: center;
+  margin: 15px auto 0 auto;
+  width: calc(100% - 20px);
+}
+
+.account_image_field {
+  height: 18px;
+  display: block;
+  margin: 10px auto 10px auto;
+  width: auto;
+}
+
+.additional_options {
+  margin-top: 40px;
+  display: flex;
+  border-top: 1px solid #cccccc;
+}
+
+.account_button {
+  display: block;
+  margin-top: 15px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.account_form {
+  display: inline-block;
+  margin: auto;
+  height: 55px;
+  transition: height 0.2s;
+  overflow: hidden;
+  width: 100%;
+}
+
+.update_form {
+  width: 100%;
+  display: inline-block;
+}
+
+.account_label {
+  margin-top: 10px;
+  margin-bottom: -10px;
+  display: block;
+  text-align: center;
+}
+
+.danger_button {
+  width: auto;
+  font-size: 20px;
+  padding: .5em;
+  border: 1px solid #c00000;
+  background-color: white;
+  color: #c00000;
+  cursor: pointer;
+  transition: background-color, color;
+  transition: 0.2s, 0.2s;
+}
+
 /* ===== FAVORITES PAGE ===== */
 
 .error_message_container {
@@ -1126,55 +1187,7 @@ input, textarea, select, option {
 
 }
 
-.account_button {
-  display: block;
-  margin-top: 15px;
-  width: calc(100% + 8px - 30px);
-  text-align: center;
-}
 
-.account_form {
-  display: inline-block;
-  margin: auto;
-  height: 55px;
-  transition: height 0.2s;
-  overflow: hidden;
-  width: 100%;
-}
-
-.update_form {
-  width: 100%;
-  display: inline-block;
-}
-
-.open {
-  height: 415px;
-}
-
-.account_label {
-  margin-top: 10px;
-  margin-bottom: 2px;
-  display: block;
-}
-
-.account_field {
-  width: calc(100% - 30px);
-}
-
-.account_image_label {
-  height: 17px;
-  display: inline-block;
-  margin: 15px auto 0 auto;
-  width: calc(100% - 20px);
-  line-height: 1.0;
-}
-
-.account_image_field {
-  height: 18px;
-  display: inline-block;
-  margin: 10px auto 5px auto;
-  width: auto;
-}
 
 .favorites_container {
   box-sizing: border-box;
@@ -1666,6 +1679,14 @@ input, textarea, select, option {
 
   .auth_redirect {
     display: inline-flex;
+    flex-direction: column;
+  }
+
+}
+
+@media (max-width: 460px) {
+
+  .additional_options {
     flex-direction: column;
   }
 
