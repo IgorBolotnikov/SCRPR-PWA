@@ -15,6 +15,8 @@ import JobsPage from './pages/jobsPage';
 import GamesPage from './pages/gamesPage';
 import LoginPage from './pages/loginPage';
 import RegisterPage from './pages/registerPage';
+
+import NoMatchesPage from './pages/noMatchesPage';
 // Components
 import Navbar from './components/navbar';
 import Footer from './components/footer';
@@ -63,6 +65,9 @@ function App() {
           </Route>
           <Route path="/rate">
             <RatePage />
+          </Route>
+          <Route path="*">
+            <NoMatchesPage />
           </Route>
         </Switch>
       </div>

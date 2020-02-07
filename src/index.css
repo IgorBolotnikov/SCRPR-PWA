@@ -71,7 +71,7 @@ input, textarea, select, option {
 
 .message_404 {
   font-size: 100px;
-  min-width: 300px;
+  min-width: 220px;
   text-align: center;
   border-bottom: 2px solid #333333;
   margin: 20px 20px 50px 20px;

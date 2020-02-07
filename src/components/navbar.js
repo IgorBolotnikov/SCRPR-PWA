@@ -40,11 +40,9 @@ export default function Navbar(props) {
   return (
     <React.Fragment>
       <label id="burger_click" className="burger_button" htmlFor="toggle">
-        <div id="burger_touch" className="burger_container">
-          <div className="line1"></div>
-          <div className="line2"></div>
-          <div className="line3"></div>
-        </div>
+        <div className="line1"></div>
+        <div className="line2"></div>
+        <div className="line3"></div>
       </label>
       <input id="toggle" type="checkbox" name="" />
       <div className="navbar">
