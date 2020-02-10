@@ -25,6 +25,7 @@ export default function FavoritesPage(props) {
       })
       .then(response => response.json())
       .then(data => {
+        console.log(data);
         setFavoritesGames(data);
         setLoadingGames({value: false})
       });
@@ -43,6 +44,7 @@ export default function FavoritesPage(props) {
       })
       .then(response => response.json())
       .then(data => {
+        console.log(data);
         setFavoritesJobs(data);
         setLoadingJobs({value: false})
       });
@@ -70,7 +72,7 @@ export default function FavoritesPage(props) {
             ) : (
               ""
             )}
-            { favoritesGames.results ? favoritesGames.results.map(item => {
+            { favoritesGames.results.length !== 0 ? favoritesGames.results.map(item => {
               return (
                 <FavoritesEntry
                   key={item.id}
@@ -91,7 +93,7 @@ export default function FavoritesPage(props) {
             ) : (
               ""
             )}
-            { favoritesJobs.results ? favoritesJobs.results.map(item => {
+            { favoritesJobs.results.length !== 0 ? favoritesJobs.results.map(item => {
               return (
                 <FavoritesEntry
                   key={item.id}

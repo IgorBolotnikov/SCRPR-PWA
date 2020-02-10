@@ -13,24 +13,12 @@ export const JOBS_URL = "/jobs?";
 
 export const JWT_REFRESH_TIME = 50 * 60 * 1000; // In milliseconds
 
-export const NOTIFICATION_OPTIONS = [
-  {
-    value: 0,
-    text: "Never"
-  },
-  {
-    value: 1,
-    text: "Every day"
-  },
-  {
-    value: 7,
-    text: "Every week"
-  },
-  {
-    value: 30,
-    text: "Every month"
-  }
-]
+export const NOTIFICATION_OPTIONS = {
+  0: "Never",
+  1: "Daily",
+  7: "Weekly",
+  30: "Monthly"
+}
 
 export const CITIES = [
   {

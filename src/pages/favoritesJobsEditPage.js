@@ -69,7 +69,7 @@ export default function FavoritesJobsEditPage(props) {
         salary_min: salaryMin.value || null,
         salary_max: salaryMax.value || null,
         with_salary: withSalary.value,
-        notification_freqency: notification.value
+        notification_freq: notification.value
       })
     })
     .then(response => response.json().then(data => ({status: response.status, data: data})))
@@ -196,8 +196,8 @@ export default function FavoritesJobsEditPage(props) {
                   value={notification.value}
                   onChange={handleNotificationChange}
                 >
-                  {NOTIFICATION_OPTIONS.map(option => (
-                    <option value={option.text} key={option.value}>{option.text}</option>
+                  {Object.entries(NOTIFICATION_OPTIONS).map(([key, value]) => (
+                    <option value={key} key={key}>{value}</option>
                   ))}
                 </select>
               </li>
