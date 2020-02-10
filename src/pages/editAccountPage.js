@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   AuthField,
-  AuthWindow,
-  AuthButton
+  AuthWindow
 } from './../components/authForms';
 
 export default function EditAccountPage(props) {
@@ -35,19 +34,17 @@ export default function EditAccountPage(props) {
       >
         <AuthField
           type="text"
-          value={username}
           maxlength="150"
           onChange={handleUsernameChange}
           value={username.value}
         />
         <AuthField
           type="email"
-          value={email}
           maxlength="254"
           onChange={handleEmailChange}
           value={email.value}
         />
-        <label for="id_image" className="account_image_label">Account avatar</label>
+        <label htmlFor="id_image" className="account_image_label">Account avatar</label>
         <input type="file" name="image" className="account_image_field" accept="image/*" id="id_image"/>
         <input type="submit" value="SUBMIT" className="account_button big_button"/>
       </form>

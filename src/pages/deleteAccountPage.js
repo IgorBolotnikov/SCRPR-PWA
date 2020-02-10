@@ -1,10 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import {
-  AuthField,
-  AuthWindow,
-  AuthButton
-} from './../components/authForms';
+import { AuthWindow } from './../components/authForms';
 
 export default function DeleteAccountPage(props) {
   function handleSubmit(event) {

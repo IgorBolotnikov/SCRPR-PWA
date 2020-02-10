@@ -218,11 +218,6 @@ input, textarea, select, option {
   width: auto;
 }
 
-.logo:hover {
-  background-color: inherit;
-  color: white;
-}
-
 .source_code {
   font-family: monospace;
   font-weight: normal;
@@ -1205,8 +1200,6 @@ input, textarea, select, option {
 
 }
 
-
-
 .favorites_container {
   box-sizing: border-box;
   margin: auto;
@@ -1256,6 +1249,11 @@ input, textarea, select, option {
 
 .favorites_field_city_filter {
   margin-left: -10px;
+}
+
+.favorites_field div {
+  margin: 0px;
+  width: 100%;
 }
 
 .favorites_field input {
@@ -1496,6 +1494,11 @@ input, textarea, select, option {
     background-color: #c00000;
     color: white;
     cursor: pointer;
+  }
+
+  .logo:hover {
+    background-color: inherit;
+    color: white;
   }
 
   #filters_button {

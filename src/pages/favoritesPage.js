@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import SideBar from './../components/sideBar';
 
 export default function FavoritesPage(props) {
@@ -40,7 +41,7 @@ export default function FavoritesPage(props) {
               notificationFrequancy="Every day"
             />
             <FavoritesEntry
-              link="games/1"
+              link="jobs/1"
               title="Junior python developer"
               notificationFrequancy="Every day"
             />
@@ -53,7 +54,7 @@ export default function FavoritesPage(props) {
 
 function FavoritesEntry(props) {
   return (
-    <a href={"/favorites/" + props.link}>
+    <Link to={"/favorites/" + props.link}>
       <li className="favorites_list_item">
         <div className="favorites_list_item_title">
           "{props.title}"
@@ -63,7 +64,7 @@ function FavoritesEntry(props) {
           {props.notificationFrequancy}
         </div>
       </li>
-    </a>
+    </Link>
   );
 }
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { API_URL } from './../App';
+import { API_URL } from './../constants';
 // Components
 import {
   SearchBarJobs,
@@ -102,11 +102,19 @@ export default function JobsPage(props) {
   }
 
   function handleSalaryMinChange(event) {
-    setSalaryMin({value: event.target.value});
+    if (event.target.value < 0) {
+      setSalaryMin({value: 0});
+    } else {
+      setSalaryMin({value: event.target.value});
+    }
   }
 
   function handleSalaryMaxChange(event) {
-    setSalaryMax({value: event.target.value});
+    if (event.target.value < 0) {
+      setSalaryMax({value: 0});
+    } else {
+      setSalaryMax({value: event.target.value});
+    }
   }
 
   function handleWithSalaryChange(event) {

@@ -25,7 +25,7 @@ export default function ResetRequest(props) {
         header="Reset Password"
         note="Please enter your email address.<br/>A message will be sent with instructions."
       >
-        <form class="auth_form" method="POST" onSubmit={handleSubmit}>
+        <form className="auth_form" method="POST" onSubmit={handleSubmit}>
           <AuthField
             type="email"
             placeholder="Email"

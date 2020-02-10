@@ -21,14 +21,13 @@ import FavoritesPage from './pages/favoritesPage';
 import EditAccountPage from './pages/editAccountPage';
 import ChangePasswordPage from './pages/changePasswordPage';
 import DeleteAccountPage from './pages/deleteAccountPage';
+import FavoritesGamesEditPage from './pages/favoritesGamesEditPage';
+import FavoritesJobsEditPage from './pages/favoritesJobsEditPage';
 
 import NoMatchesPage from './pages/noMatchesPage';
 // Components
 import Navbar from './components/navbar';
 import Footer from './components/footer';
-
-// Change this URL if API is relocated
-export const API_URL = 'https://scrpr-develop.herokuapp.com/api/v1';
 
 function App() {
   return (
@@ -87,8 +86,14 @@ function App() {
           <Route path="/rate">
             <RatePage />
           </Route>
-          <Route path="/favorites">
+          <Route path="/favorites" exact>
             <FavoritesPage />
+          </Route>
+          <Route path="/favorites/games/:id">
+            <FavoritesGamesEditPage />
+          </Route>
+          <Route path="/favorites/jobs/:id">
+            <FavoritesJobsEditPage />
           </Route>
           <Route path="*">
             <NoMatchesPage />

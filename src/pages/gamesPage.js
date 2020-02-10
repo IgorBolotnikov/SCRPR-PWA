@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { API_URL } from './../App';
+import { API_URL } from './../constants';
 // Components
 import {
   SearchBarGames,
@@ -75,11 +75,19 @@ export default function GamesPage(props) {
   }
 
   function handlePriceMinChange(event) {
-    setPriceMin({value: event.target.value});
+    if (event.target.value < 0) {
+      setPriceMin({value: 0});
+    } else {
+      setPriceMin({value: event.target.value});
+    }
   }
 
   function handlePriceMaxChange(event) {
+  if (event.target.value < 0) {
+    setPriceMax({value: 0});
+  } else {
     setPriceMax({value: event.target.value});
+  }
   }
 
   function handlePSPlusPriceChange(event) {
