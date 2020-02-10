@@ -19,6 +19,7 @@ import ResetRequest from './pages/passwordReset/resetRequest';
 import ResetPassword from './pages/passwordReset/resetPassword';
 import FavoritesPage from './pages/favoritesPage';
 import EditAccountPage from './pages/editAccountPage';
+import ChangePasswordPage from './pages/changePasswordPage';
 
 import NoMatchesPage from './pages/noMatchesPage';
 // Components
@@ -72,6 +73,9 @@ function App() {
           </Route>
           <Route path="/auth/edit-account">
             <EditAccountPage />
+          </Route>
+          <Route path="/auth/change-password">
+            <ChangePasswordPage />
           </Route>
           <Route path="/about">
             <AboutPage />
