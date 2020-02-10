@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { API_URL } from './../constants';
+import { API_URL, FAVORITES_URL } from './../constants';
 // Components
 import {
   SearchBarGames,
@@ -8,6 +8,7 @@ import {
   FiltersList
 } from './../components/searchBar';
 import Pagination from './../components/pagination';
+import useUserStore from './../userStore';
 
 const GAMES_URL = "/games?";
 
@@ -21,6 +22,7 @@ export default function GamesPage(props) {
   let [discountPrice, setDiscountPrice] = useState({value: false});
   let [free, setFree] = useState({value: false});
   let [page, setPage] = useState({value: 1});
+  const user = useUserStore();
 
   function getQueryString() {
     var params = {};
@@ -53,7 +55,6 @@ export default function GamesPage(props) {
 
   function fetchGames() {
     const URL = API_URL + GAMES_URL + getQueryString();
-    console.log(URL);
     window.scrollTo(0, 0);
     setLoading({value: true});
     fetch(URL, { headers: {
@@ -105,6 +106,36 @@ export default function GamesPage(props) {
   function handleSubmit(event) {
     event.preventDefault();
     fetchGames();
+  }
+
+  function handleSaveToFavorites(event) {
+    event.preventDefault();
+    fetch(API_URL + FAVORITES_URL + '/games/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `JWT ${localStorage.getItem('token')}`,
+      },
+      body: JSON.stringify({
+        title: title.value,
+        price_min: priceMin.value,
+        price_max: priceMax.value,
+        psplus_price: PSPlusPrice.value,
+        initial_price: discountPrice.value,
+        free: free.value
+      })
+    })
+    .then(response => response.json().then(data => ({status: response.status, data: data})))
+    .then(data => {
+      if (data.status === 201) {
+        console.log(data);
+        console.log("Created!");
+      } else {
+        console.log(data);
+        console.log("Not created!");
+      }
+    })
+    .catch(error => console.error('Error:', error));
   }
 
   useEffect(() => {
@@ -160,6 +191,11 @@ export default function GamesPage(props) {
             />
           </FiltersTabGames>
         </form>
+        { user.isAuthenticated && (
+          <div className="add_to_favorites_container">
+            <input type="submit" onClick={handleSaveToFavorites} className="big_button save_to_favorites_button" value="Save to Favorites"/>
+          </div>
+        )}
       </div>
 
       <div className="results_container">
@@ -204,7 +240,7 @@ function GameCard(props) {
           {props.result.initial_price !== null ? (
             <div className="list_price strikethrough">{props.result.initial_price} UAH</div>
           ) : ("")}
-          {props.result.price !==0 ? (
+          {props.result.price !== 0 ? (
             <div className="list_price">{props.result.price} UAH</div>
           ) : ("")}
           {props.result.psplus_price !== null ? (props.result.psplus_price === 0 ? (

@@ -2,13 +2,16 @@ import React from 'react';
 
 export function AuthField(props) {
   return (
-    <input
-      type={props.type}
-      className="auth_field field"
-      placeholder={props.placeholder}
-      onChange={props.onChange}
-      value={props.value}
-    />
+    <React.Fragment>
+      <input
+        type={props.type}
+        className={props.errors.length !== 0 ? "auth_field field input_error" : "auth_field field"}
+        placeholder={props.placeholder}
+        onChange={props.onChange}
+        value={props.value}
+      />
+      { props.errors && <FieldErrors errors={props.errors} /> }
+    </React.Fragment>
   );
 }
 
@@ -38,5 +41,19 @@ export function AuthWindow(props) {
       )}
       {props.children}
     </div>
+  );
+}
+
+function FieldErrors(props) {
+  return (
+    <React.Fragment>
+      {props.errors.map((error, index) => {
+        return (
+          <div key={index} className="error_message_container">
+            <span className="error_message">{error}</span>
+          </div>
+        );
+      })}
+    </React.Fragment>
   );
 }

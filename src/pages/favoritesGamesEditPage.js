@@ -5,9 +5,7 @@ import {
   NumericFilterField,
   CheckBoxFilterField
 } from './../components/searchBar';
-import { API_URL, NOTIFICATION_OPTIONS } from './../constants';
-
-const FAVORITES_GAMES_URL = "/favorites/games/";
+import { API_URL, NOTIFICATION_OPTIONS, FAVORITES_URL } from './../constants';
 
 export default function FavoritesGamesEditPage(props) {
   const { id } = useParams();
@@ -58,7 +56,33 @@ export default function FavoritesGamesEditPage(props) {
 
   function handleSubmit(event) {
     event.preventDefault();
-    console.log(notification);
+    fetch(API_URL + FAVORITES_URL + "/games/" + id + "/", {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `JWT ${localStorage.getItem('token')}`,
+      },
+      body: JSON.stringify({
+        title: title.value,
+        price_min: priceMin.value || null,
+        price_max: priceMax.value || null,
+        psplus_price: PSPlusPrice.value,
+        initial_price: discountPrice.value,
+        free: free.value,
+        notification_freq: notification.value
+      })
+    })
+    .then(response => response.json().then(data => ({status: response.status, data: data})))
+    .then(data => {
+      if (data.status === 200) {
+        console.log(data);
+        console.log("Created!");
+      } else {
+        console.log(data);
+        console.log("Not created!");
+      }
+    })
+    .catch(error => console.error('Error:', error));
   }
 
   function deleteFavoriteGame(event) {
@@ -66,18 +90,18 @@ export default function FavoritesGamesEditPage(props) {
   }
 
   function fetchFavoriteGame() {
-    const URL = API_URL + FAVORITES_GAMES_URL + id;
-    console.log(URL);
+    const URL = API_URL + FAVORITES_URL + "/games/" + id + "/";
     window.scrollTo(0, 0);
     setLoading({value: true});
     fetch(URL, { headers: {
       'Content-Type': 'application/json',
+      'Authorization': `JWT ${localStorage.getItem('token')}`,
     }})
       .then(response => response.json())
       .then(data => {
         setTitle({value: data.title || ""});
-        setPriceMin({value: data.price_min || 0});
-        setPriceMax({value: data.price_max || 0});
+        setPriceMin({value: Number(data.price_min) || 0});
+        setPriceMax({value: Number(data.price_max) || 0});
         setPSPlusPrice({value: data.psplus_price || false});
         setDiscountPrice({value: data.initial_price || false});
         setFree({value: data.free || false})
@@ -88,7 +112,7 @@ export default function FavoritesGamesEditPage(props) {
   useEffect(() => {
     fetchFavoriteGame();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id])
+  }, [])
 
   return (
     <React.Fragment>
@@ -175,8 +199,8 @@ export default function FavoritesGamesEditPage(props) {
                   value={notification.value}
                   onChange={handleNotificationChange}
                 >
-                  {NOTIFICATION_OPTIONS.map(option => (
-                    <option value={option.value} key={option.value}>{option.text}</option>
+                  {Object.entries(NOTIFICATION_OPTIONS).map(([key, value]) => (
+                    <option value={key} key={key}>{value}</option>
                   ))}
                 </select>
               </li>

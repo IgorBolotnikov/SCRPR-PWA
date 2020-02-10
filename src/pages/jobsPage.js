@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { API_URL } from './../constants';
+import { API_URL, FAVORITES_URL, JOBS_URL, CITIES } from './../constants';
 // Components
 import {
   SearchBarJobs,
@@ -8,45 +8,18 @@ import {
   FiltersList
 } from './../components/searchBar';
 import Pagination from './../components/pagination';
-
-const citiesOptions = [
-  {
-    value: "",
-    text: "All Ukraine"
-  },
-  {
-    value: "Киев",
-    text: "Kyiv"
-  },
-  {
-    value: "Одесса",
-    text: "Odesa"
-  },
-  {
-    value: "Днепр",
-    text: "Dnipro"
-  },
-  {
-    value: "Харьков",
-    text: "Kharkiv"
-  },
-  {
-    value: "Львов",
-    text: "Lviv"
-  },
-]
-
-const JOBS_URL = "/jobs?";
+import useUserStore from './../userStore';
 
 export default function JobsPage(props) {
-  let [loading, setLoading] = useState({value: true});
-  let [jobs, setJobs] = useState({pagination: {}, results: []});
-  let [title, setTitle] = useState({value: ""});
-  let [city, setCity] = useState({value: ""});
-  let [salaryMin, setSalaryMin] = useState({value: 0.00});
-  let [salaryMax, setSalaryMax] = useState({value: 0.00});
-  let [withSalary, setWithSalary] = useState({value: false});
-  let [page, setPage] = useState({value: 1});
+  const [loading, setLoading] = useState({value: true});
+  const [jobs, setJobs] = useState({pagination: {}, results: []});
+  const [title, setTitle] = useState({value: ""});
+  const [city, setCity] = useState({value: ""});
+  const [salaryMin, setSalaryMin] = useState({value: 0.00});
+  const [salaryMax, setSalaryMax] = useState({value: 0.00});
+  const [withSalary, setWithSalary] = useState({value: false});
+  const [page, setPage] = useState({value: 1});
+  const user = useUserStore();
 
   function getQueryString() {
     var params = {};
@@ -76,7 +49,6 @@ export default function JobsPage(props) {
 
   function fetchJobs() {
     const URL = API_URL + JOBS_URL + getQueryString();
-    console.log(URL);
     window.scrollTo(0, 0);
     setLoading({value: true});
     fetch(URL, { headers: {
@@ -126,6 +98,35 @@ export default function JobsPage(props) {
     fetchJobs();
   }
 
+  function handleSaveToFavorites(event) {
+    event.preventDefault();
+    fetch(API_URL + FAVORITES_URL + '/jobs/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `JWT ${localStorage.getItem('token')}`,
+      },
+      body: JSON.stringify({
+        title: title.value,
+        location: city.value,
+        salary_min: salaryMin.value,
+        salary_max: salaryMax.value,
+        with_salary: withSalary.value,
+      })
+    })
+    .then(response => response.json().then(data => ({status: response.status, data: data})))
+    .then(data => {
+      if (data.status === 201) {
+        console.log(data);
+        console.log("Created!");
+      } else {
+        console.log(data);
+        console.log("Not created!");
+      }
+    })
+    .catch(error => console.error('Error:', error));
+  }
+
   useEffect(() => {
     fetchJobs();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -145,7 +146,7 @@ export default function JobsPage(props) {
             />
           </div>
           <FiltersTabJobs
-            cities={citiesOptions}
+            cities={CITIES}
             city={city.value}
             onCityChange={handleCityChange}
           >
@@ -171,6 +172,11 @@ export default function JobsPage(props) {
             />
           </FiltersTabJobs>
         </form>
+        { user.isAuthenticated && (
+          <div className="add_to_favorites_container">
+            <input type="submit" onClick={handleSaveToFavorites} className="big_button save_to_favorites_button" value="Save to Favorites"/>
+          </div>
+        )}
       </div>
 
       <div className="results_container">

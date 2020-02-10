@@ -5,21 +5,29 @@ import {
   NumericFilterField,
   CheckBoxFilterField
 } from './../components/searchBar';
-import { API_URL, NOTIFICATION_OPTIONS } from './../constants';
+import {
+  API_URL,
+  NOTIFICATION_OPTIONS,
+  FAVORITES_URL,
+  CITIES
+} from './../constants';
 
-const FAVORITES_JOBS_URL = "/favorites/games/";
-
-export default function FavoritesGamesEditPage(props) {
+export default function FavoritesJobsEditPage(props) {
   const { id } = useParams();
-  let [loading, setLoading] = useState({value: false});
-  let [title, setTitle] = useState({value: ""});
-  let [salaryMin, setSalaryMin] = useState({value: 0.00});
-  let [salaryMax, setSalaryMax] = useState({value: 0.00});
-  let [withSalary, setWithSalary] = useState({value: false});
-  let [notification, setNotification] = useState({value: 0});
+  const [loading, setLoading] = useState({value: false});
+  const [title, setTitle] = useState({value: ""});
+  const [city, setCity] = useState({value: ""});
+  const [salaryMin, setSalaryMin] = useState({value: 0.00});
+  const [salaryMax, setSalaryMax] = useState({value: 0.00});
+  const [withSalary, setWithSalary] = useState({value: false});
+  const [notification, setNotification] = useState({value: ""});
 
   function handleTitleChange(event) {
     setTitle({value: event.target.value});
+  }
+
+  function handleCityChange(event) {
+    setCity({value: event.target.value});
   }
 
   function handleSalaryMinChange(event) {
@@ -48,22 +56,49 @@ export default function FavoritesGamesEditPage(props) {
 
   function handleSubmit(event) {
     event.preventDefault();
-    console.log(notification);
+    console.log(notification.text);
+    fetch(API_URL + FAVORITES_URL + '/jobs/' + id + "/", {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `JWT ${localStorage.getItem('token')}`,
+      },
+      body: JSON.stringify({
+        title: title.value,
+        city: city.value,
+        salary_min: salaryMin.value || null,
+        salary_max: salaryMax.value || null,
+        with_salary: withSalary.value,
+        notification_freq: notification.value
+      })
+    })
+    .then(response => response.json().then(data => ({status: response.status, data: data})))
+    .then(data => {
+      if (data.status === 200) {
+        console.log(data);
+        console.log("Created!");
+      } else {
+        console.log(data);
+        console.log("Not created!");
+      }
+    })
+    .catch(error => console.error('Error:', error));
   }
 
   function fetchFavoriteGame() {
-    const URL = API_URL + FAVORITES_JOBS_URL + id;
+    const URL = API_URL + FAVORITES_URL + "/jobs/" + id + "/";
     console.log(URL);
     window.scrollTo(0, 0);
     setLoading({value: true});
     fetch(URL, { headers: {
       'Content-Type': 'application/json',
+      'Authorization': `JWT ${localStorage.getItem('token')}`,
     }})
       .then(response => response.json())
       .then(data => {
         setTitle({value: data.title || ""});
-        setSalaryMin({value: data.salary_min || 0});
-        setSalaryMax({value: data.salary_max || 0});
+        setSalaryMin({value: Number(data.salary_min) || 0});
+        setSalaryMax({value: Number(data.salary_max) || 0});
         setWithSalary({value: data.psplus_salary || false});
         setLoading({value: false});
       })
@@ -76,7 +111,7 @@ export default function FavoritesGamesEditPage(props) {
   useEffect(() => {
     fetchFavoriteGame();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id])
+  }, [])
 
   return (
     <React.Fragment>
@@ -101,7 +136,7 @@ export default function FavoritesGamesEditPage(props) {
             <ul className="favorites_list window">
               <h2 className="favorites_header">Manage Parameters</h2>
               <li className="favorites_field">
-                <label className="numeric_filter_label" htmlFor="id_title">Game title</label>
+                <label className="numeric_filter_label" htmlFor="id_title">Job title</label>
                 <input
                   type="text"
                   name="title"
@@ -112,6 +147,20 @@ export default function FavoritesGamesEditPage(props) {
                   maxLength="100"
                   id="id_title"
                 />
+              </li>
+              <li className="favorites_field">
+                <label className="numeric_filter_label" htmlFor="id_title">City</label>
+                <select
+                  name="city"
+                  className="field city_filter city_separate"
+                  id="id_city"
+                  value={city.value}
+                  onChange={handleCityChange}
+                >
+                  {CITIES.map(city => (
+                    <option value={city.value} key={city.value}>{city.text}</option>
+                  ))}
+                </select>
               </li>
               <li className="favorites_field">
                 <NumericFilterField
@@ -147,8 +196,8 @@ export default function FavoritesGamesEditPage(props) {
                   value={notification.value}
                   onChange={handleNotificationChange}
                 >
-                  {NOTIFICATION_OPTIONS.map(option => (
-                    <option value={option.value} key={option.value}>{option.text}</option>
+                  {Object.entries(NOTIFICATION_OPTIONS).map(([key, value]) => (
+                    <option value={key} key={key}>{value}</option>
                   ))}
                 </select>
               </li>

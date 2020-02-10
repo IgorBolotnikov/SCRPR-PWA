@@ -1,50 +1,109 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+
 import SideBar from './../components/sideBar';
+import useUserStore from './../userStore';
+import { API_URL, FAVORITES_URL } from './../constants';
 
 export default function FavoritesPage(props) {
+  const [loadingGames, setLoadingGames] = useState({value: false});
+  const [favoritesGames, setFavoritesGames] = useState({pagination: [], results: []});
+  const [loadingJobs, setLoadingJobs] = useState({value: false});
+  const [favoritesJobs, setFavoritesJobs] = useState({pagination: [], results: []});
+  const user = useUserStore();
+
+  function fetchFavoritesGames() {
+    setLoadingGames({value: true});
+    fetch(
+      API_URL + FAVORITES_URL + "/games/",
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `JWT ${localStorage.getItem('token')}`,
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        setFavoritesGames(data);
+        setLoadingGames({value: false})
+      });
+  }
+
+  function fetchFavoritesJobs() {
+    setLoadingJobs({value: true});
+    fetch(
+      API_URL + FAVORITES_URL + "/jobs/",
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `JWT ${localStorage.getItem('token')}`,
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        setFavoritesJobs(data);
+        setLoadingJobs({value: false})
+      });
+  }
+
+  useEffect(() => {
+    fetchFavoritesGames();
+    fetchFavoritesJobs();
+  }, [])
 
   return (
     <React.Fragment>
       <SideBar
-        userId={1}
-        username="IgorBolotnikov"
-        email="igorbolotnikov1993@gmail.com"
-        image={null}
+        username={user.username}
+        email={user.email}
+        image={user.image}
       />
-
       <div className="results_container">
         <div className="favorites_container window">
           <FavoritesList
             header="Favorites in Games"
           >
-            <FavoritesEntry
-              link="games/3"
-              title="observation"
-              additionalInfo=", With discount"
-              notificationFrequancy="Every day"
-            />
-            <FavoritesEntry
-              link="games/1"
-              title="Deus Ex"
-              additionalInfo=", With discount"
-              notificationFrequancy="Every day"
-            />
+            {loadingGames.value ? (
+              <div className="lds-dual-ring"></div>
+            ) : (
+              ""
+            )}
+            { favoritesGames.results.length !== 0 ? favoritesGames.results.map(item => {
+              return (
+                <FavoritesEntry
+                  key={item.id}
+                  link={"games/" + item.id}
+                  title={item.title}
+                  additionalInfo={item.details}
+                  notificationFrequancy={item.notification}
+                />
+              );
+            }) : (<h3 className="no_favorites_header">No Favorites yet</h3>) }
           </FavoritesList>
           <br />
           <FavoritesList
             header="Favorites in Jobs"
           >
-            <FavoritesEntry
-              link="jobs/2"
-              title="Python developer"
-              notificationFrequancy="Every day"
-            />
-            <FavoritesEntry
-              link="jobs/1"
-              title="Junior python developer"
-              notificationFrequancy="Every day"
-            />
+            {loadingJobs.value ? (
+              <div className="lds-dual-ring"></div>
+            ) : (
+              ""
+            )}
+            { favoritesJobs.results.length !== 0 ? favoritesJobs.results.map(item => {
+              return (
+                <FavoritesEntry
+                  key={item.id}
+                  link={"jobs/" + item.id}
+                  title={item.title}
+                  additionalInfo={item.details}
+                  notificationFrequancy={item.notification}
+                />
+              );
+            })  : (<h3 className="no_favorites_header">No Favorites yet</h3>) }
           </FavoritesList>
         </div>
       </div>
