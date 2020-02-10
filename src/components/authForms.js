@@ -31,6 +31,11 @@ export function AuthWindow(props) {
           dangerouslySetInnerHTML={{__html: props.note}}
         />
       )}
+      { props.warning && (
+        <p className="warning_message"
+          dangerouslySetInnerHTML={{__html: props.warning}}
+        />
+      )}
       {props.children}
     </div>
   );

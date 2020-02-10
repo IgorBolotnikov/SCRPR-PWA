@@ -20,6 +20,7 @@ import ResetPassword from './pages/passwordReset/resetPassword';
 import FavoritesPage from './pages/favoritesPage';
 import EditAccountPage from './pages/editAccountPage';
 import ChangePasswordPage from './pages/changePasswordPage';
+import DeleteAccountPage from './pages/deleteAccountPage';
 
 import NoMatchesPage from './pages/noMatchesPage';
 // Components
@@ -76,6 +77,9 @@ function App() {
           </Route>
           <Route path="/auth/change-password">
             <ChangePasswordPage />
+          </Route>
+          <Route path="/auth/delete-account">
+            <DeleteAccountPage />
           </Route>
           <Route path="/about">
             <AboutPage />

@@ -12,8 +12,8 @@ export default function FavoritesPage(props) {
         image={null}
       />
 
-      <div class="results_container">
-        <div class="favorites_container window">
+      <div className="results_container">
+        <div className="favorites_container window">
           <FavoritesList
             header="Favorites in Games"
           >
@@ -54,12 +54,12 @@ export default function FavoritesPage(props) {
 function FavoritesEntry(props) {
   return (
     <a href={"/favorites/" + props.link}>
-      <li class="favorites_list_item">
-        <div class="favorites_list_item_title">
+      <li className="favorites_list_item">
+        <div className="favorites_list_item_title">
           "{props.title}"
-          {props.additionalInfo && <span class="favorites_list_item_additional">{props.additionalInfo}</span>}
+          {props.additionalInfo && <span className="favorites_list_item_additional">{props.additionalInfo}</span>}
         </div>
-        <div class="favorites_list_item_notifications">
+        <div className="favorites_list_item_notifications">
           {props.notificationFrequancy}
         </div>
       </li>
@@ -69,8 +69,8 @@ function FavoritesEntry(props) {
 
 function FavoritesList(props) {
   return (
-    <ul class="favorites_list">
-      <h2 class="favorites_header">{props.header}</h2>
+    <ul className="favorites_list">
+      <h2 className="favorites_header">{props.header}</h2>
       {props.children}
     </ul>
   );

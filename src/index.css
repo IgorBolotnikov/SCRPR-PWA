@@ -65,6 +65,17 @@ input, textarea, select, option {
   margin: 15px;
 }
 
+.warning_message {
+  color: #d80000;
+  text-align: center;
+}
+
+.button_options {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
 .message_404_container {
   padding-top: 15px;
   width: 100%;
@@ -1089,6 +1100,13 @@ input, textarea, select, option {
   border-top: 1px solid #cccccc;
 }
 
+.edit_account_button {
+  display: block;
+  margin-top: 15px;
+  width: calc(100% + 8px - 30px);
+  text-align: center;
+}
+
 .account_button {
   display: block;
   margin-top: 15px;
@@ -1472,6 +1490,12 @@ input, textarea, select, option {
   .navbutton:hover {
     background-color: white;
     color: #ff4d4d;
+  }
+
+  .danger_button:hover {
+    background-color: #c00000;
+    color: white;
+    cursor: pointer;
   }
 
   #filters_button {

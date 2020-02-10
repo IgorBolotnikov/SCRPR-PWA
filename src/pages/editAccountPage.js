@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
   AuthField,
   AuthWindow,
@@ -29,7 +30,7 @@ export default function EditAccountPage(props) {
       <form
         className="update_form"
         method="POST"
-        enctype="multipart/form-data"
+        encType="multipart/form-data"
         onSubmit={handleSubmit}
       >
         <AuthField
@@ -51,8 +52,8 @@ export default function EditAccountPage(props) {
         <input type="submit" value="SUBMIT" className="account_button big_button"/>
       </form>
       <div className="additional_options">
-        <a className="account_button big_button" href="/auth/change_password">Change Password</a>
-        <a className="account_button danger_button" href="/auth/delete_account">Delete Account</a>
+        <Link className="account_button big_button" to="/auth/change-password">Change Password</Link>
+        <Link className="account_button danger_button" to="/auth/delete-account">Delete Account</Link>
       </div>
     </AuthWindow>
   );
