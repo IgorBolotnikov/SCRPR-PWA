@@ -4,12 +4,21 @@ import {
   AuthWindow,
   AuthButton
 } from './../components/authForms';
+import useUserStore from './../userStore';
+import { API_URL, CREATE_USER_URL } from './../constants';
 
 export default function RegisterPage(props) {
   let [username, setUsername] = useState({value: ""});
   let [email, setEmail] = useState({value: ""});
   let [password, setPassword] = useState({value: ""});
   let [confirmPassword, setConfirmPassword] = useState({value: ""});
+  const [formErrors, setFormErrors] = useState({
+    username: [],
+    email: [],
+    password: [],
+    confirmPassword: []
+  });
+  const user = useUserStore();
 
   function handleUsernameChange(event) {
     setUsername({value: event.target.value});
@@ -27,9 +36,103 @@ export default function RegisterPage(props) {
     setConfirmPassword({value: event.target.value});
   }
 
+  function validateUsername() {
+    let errors = [];
+    if (username.value.length > 150) {
+      errors.push('Username is too long');
+    }
+    if (username.value.length === 0) {
+      errors.push('Username is required');
+    }
+    return errors;
+  }
+
+  function validateEmail() {
+    let errors = [];
+    if (!(/\S+@\S+/).test(email.value)) {
+      errors.push('Please enter correct email');
+    }
+    if (email.value.length > 254) {
+      errors.push('Email is too long');
+    }
+    if (email.value.length === 0) {
+      errors.push('Email is required');
+    }
+    return errors;
+  }
+
+  function validatePassword() {
+    let errors = [];
+    if (password.value.length > 0 && password.value.length < 8) {
+      errors.push('Password is too short');
+    }
+    if (password.value.length === 0) {
+      errors.push('Password is required');
+    }
+    return errors;
+  }
+
+  function validateConfirmPassword() {
+    let errors = []
+    if  (password.value !== confirmPassword.value) {
+      errors.push('Passwords must match');
+    }
+    return errors;
+  }
+
+  function validateForm() {
+    const usernameErrors = validateUsername();
+    const emailErrors = validateEmail();
+    const passwordErrors = validatePassword();
+    const confirmPasswordErrors = validateConfirmPassword();
+    const usernameValid = usernameErrors.length === 0;
+    const emailValid = emailErrors.length === 0;
+    const passwordValid = passwordErrors.length === 0;
+    const confirmPasswordValid = confirmPasswordErrors.length === 0;
+    const formValid = usernameValid && emailValid && passwordValid && confirmPasswordValid;
+    setFormErrors({
+      username: usernameErrors,
+      email: emailErrors,
+      password: passwordErrors,
+      confirmPassword: confirmPasswordErrors
+    })
+    return formValid;
+  }
+
   function handleSubmit(event) {
     event.preventDefault();
-    console.log(username.value, email.value, password.value, confirmPassword.value);
+    const formValid = validateForm();
+    console.log(formValid);
+    if (!formValid) {
+      console.log("Form is invalid");
+      return;
+    }
+    fetch(API_URL + CREATE_USER_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        username: username.value,
+        email: email.value,
+        password: password.value
+      })
+    })
+      .then(response => response.json().then(data => ({status: response.status, data: data})))
+      .then(object => {
+        if (object.status === 201) {
+          localStorage.setItem('token', object.data.token);
+          user.update(object.data.user);
+        } else if (object.status === 400) {
+          setFormErrors({
+            username: object.data.username || [],
+            email: object.data.email || [],
+            password: object.data.password || [],
+            confirmPassword: []
+          })
+        }
+      })
+      .catch(error => console.error('Error:', error));
   }
 
 
@@ -44,24 +147,28 @@ export default function RegisterPage(props) {
           placeholder="Username"
           onChange={handleUsernameChange}
           value={username.value}
+          errors={formErrors.username}
         />
         <AuthField
           type="email"
           placeholder="Email"
           onChange={handleEmailChange}
           value={email.value}
+          errors={formErrors.email}
         />
         <AuthField
           type="password"
           placeholder="Password"
           onChange={handlePasswordChange}
           value={password.value}
+          errors={formErrors.password}
         />
         <AuthField
           type="password"
           placeholder="Confirm password"
           onChange={handleConfirmPasswordChange}
           value={confirmPassword.value}
+          errors={formErrors.confirmPassword}
         />
         <AuthButton value="SUBMIT"/>
         <div className='auth_redirect'>

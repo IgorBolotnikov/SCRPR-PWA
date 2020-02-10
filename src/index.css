@@ -1043,7 +1043,7 @@ input, textarea, select, option {
   display: block;
 }
 
-.input_error input, textarea {
+.input_error {
   border-color: rgb(200, 1, 1);
 }
 
