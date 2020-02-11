@@ -35,6 +35,11 @@ input, textarea, select, option {
   color: rgb(1, 150, 1);
 }
 
+.text_grey {
+  text-align: center;
+  color: grey;
+}
+
 ::selection {
   background-color: #ff4d4d;
   color: white;

@@ -1,10 +1,29 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { AuthWindow } from './../components/authForms';
+import { API_URL, USER_URL } from './../constants';
+import useUserStore from './../userStore';
 
 export default function DeleteAccountPage(props) {
+  const user = useUserStore();
+
   function handleSubmit(event) {
     event.prevertDefault();
+    fetch(API_URL + USER_URL, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `JWT ${localStorage.getItem('token')}`,
+      },
+    })
+      .then(response => response.json().then(data => ({status: response.status, data: data})))
+      .then(object => {
+        if (object.status === 200) {
+          localStorage.removeItem('token', object.data.token);
+          user.reset();
+        }
+      })
+      .catch(error => console.error('Error:', error));
   }
 
   return (

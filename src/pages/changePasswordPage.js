@@ -77,12 +77,11 @@ export default function ChangePasswordPage(props) {
   function handleSubmit(event) {
     event.preventDefault();
     const formValid = validateForm();
-    console.log(formValid);
     if (!formValid) {
       return;
     }
     fetch(API_URL + CHANGE_PASSWORD_URL, {
-      method: 'POST',
+      method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `JWT ${localStorage.getItem('token')}`,
@@ -92,10 +91,16 @@ export default function ChangePasswordPage(props) {
         new_password: newPassword.value,
       })
     })
-      .then(response => response.json().then(data => ({status: response.status, data: data})))
+      .then(response => {
+        if (response.status === 200) {
+          return {status: response.status, data: null};
+        } else {
+          return response.json().then(data => ({status: response.status, data: data}))};
+        }
+      )
       .then(object => {
         if (object.status === 200) {
-          console.log("Passowrd changed!");
+          
         } else if (object.status === 400) {
           setFormErrors({
             oldPassword: object.data.old_password || [],

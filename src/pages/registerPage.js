@@ -8,10 +8,10 @@ import useUserStore from './../userStore';
 import { API_URL, CREATE_USER_URL } from './../constants';
 
 export default function RegisterPage(props) {
-  let [username, setUsername] = useState({value: ""});
-  let [email, setEmail] = useState({value: ""});
-  let [password, setPassword] = useState({value: ""});
-  let [confirmPassword, setConfirmPassword] = useState({value: ""});
+  const [username, setUsername] = useState({value: ""});
+  const [email, setEmail] = useState({value: ""});
+  const [password, setPassword] = useState({value: ""});
+  const [confirmPassword, setConfirmPassword] = useState({value: ""});
   const [formErrors, setFormErrors] = useState({
     username: [],
     email: [],

@@ -205,24 +205,25 @@ export default function GamesPage(props) {
           ""
         )}
         {games.results.length > 0 ? (
-          <ul className={loading.value ? (
+          <React.Fragment>
+            <ul className={loading.value ? (
               "results_list_games loading"
-          ) : (
+            ) : (
               "results_list_games"
-          )}>
-            {games.results.map(result => <GameCard result={result} key={result.link}/>)}
-          </ul>
+            )}>
+              {games.results.map(result => <GameCard result={result} key={result.link}/>)}
+            </ul>
+            {games.pagination.last_page && games.pagination.last_page !== 1 ? (
+              <Pagination
+                page={games.pagination.page}
+                prevPage={games.pagination.prev_page}
+                nextPage={games.pagination.next_page}
+                lastPage={games.pagination.last_page}
+                onPageChange={handleDiffPage}
+              />
+            ) : ("")}
+          </React.Fragment>
         ) : (loading.value ? ("") : (<h1 className="no_results">No results :(</h1>))}
-
-        {games.pagination.last_page && games.pagination.last_page !== 1 ? (
-          <Pagination
-            page={games.pagination.page}
-            prevPage={games.pagination.prev_page}
-            nextPage={games.pagination.next_page}
-            lastPage={games.pagination.last_page}
-            onPageChange={handleDiffPage}
-          />
-        ) : ("")}
       </div>
     </React.Fragment>
   );
