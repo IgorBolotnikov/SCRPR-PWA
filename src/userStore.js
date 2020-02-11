@@ -3,7 +3,6 @@ import React, { createContext, useReducer, useContext } from 'react';
 const UserContext = createContext();
 
 const InitialUserStore = {
-  id: "",
   username: "",
   email: "",
   image: "",
@@ -20,7 +19,6 @@ function UserReducer(state, action) {
     case ACTIONS.UPDATE_USER:
       console.log(action.payload);
       return {
-        id: action.payload.id,
         username: action.payload.username,
         email: action.payload.email,
         image: action.payload.image,
@@ -29,7 +27,6 @@ function UserReducer(state, action) {
     case ACTIONS.RESET_USER:
       localStorage.removeItem("token");
       return {
-        id: "",
         username: "",
         email: "",
         image: "",

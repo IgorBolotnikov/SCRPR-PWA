@@ -6,8 +6,12 @@ export const REFRESH_TOKEN_URL = '/auth/refresh-token';
 
 export const NEWS_URL = '/news';
 export const FAVORITES_URL = '/favorites';
+export const USER_URL = '/user';
 export const CREATE_USER_URL = '/user/create';
 export const CHANGE_PASSWORD_URL = '/user/update-password';
+export const RESET_PASSWORD_URL = '/password_reset/';
+export const RESET_PASSWORD_CONFIRM_URL = '/password_reset/confirm/';
+export const RESET_PASSWORD_VALIDATE_URL = '/password_reset/validate_token/';
 
 export const JOBS_URL = "/jobs?";
 

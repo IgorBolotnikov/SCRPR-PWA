@@ -9,14 +9,14 @@ import { API_URL, NOTIFICATION_OPTIONS, FAVORITES_URL } from './../constants';
 
 export default function FavoritesGamesEditPage(props) {
   const { id } = useParams();
-  let [loading, setLoading] = useState({value: false});
-  let [title, setTitle] = useState({value: ""});
-  let [priceMin, setPriceMin] = useState({value: 0.00});
-  let [priceMax, setPriceMax] = useState({value: 0.00});
-  let [PSPlusPrice, setPSPlusPrice] = useState({value: false});
-  let [discountPrice, setDiscountPrice] = useState({value: false});
-  let [free, setFree] = useState({value: false});
-  let [notification, setNotification] = useState({value: 0});
+  const [loading, setLoading] = useState({value: false});
+  const [title, setTitle] = useState({value: ""});
+  const [priceMin, setPriceMin] = useState({value: 0.00});
+  const [priceMax, setPriceMax] = useState({value: 0.00});
+  const [PSPlusPrice, setPSPlusPrice] = useState({value: false});
+  const [discountPrice, setDiscountPrice] = useState({value: false});
+  const [free, setFree] = useState({value: false});
+  const [notification, setNotification] = useState({value: 0});
 
   function handleTitleChange(event) {
     setTitle({value: event.target.value});
@@ -75,18 +75,21 @@ export default function FavoritesGamesEditPage(props) {
     .then(response => response.json().then(data => ({status: response.status, data: data})))
     .then(data => {
       if (data.status === 200) {
-        console.log(data);
-        console.log("Created!");
       } else {
-        console.log(data);
-        console.log("Not created!");
       }
     })
     .catch(error => console.error('Error:', error));
   }
 
   function deleteFavoriteGame(event) {
-    console.log('Pressed delete!');
+    const URL = API_URL + FAVORITES_URL + "/games/" + id + "/";
+    fetch(URL, {
+      method: 'DELETE',
+      'headers': {
+        'Content-Type': 'application/json',
+        'Authorization': `JWT ${localStorage.getItem('token')}`,
+      }
+    })
   }
 
   function fetchFavoriteGame() {
