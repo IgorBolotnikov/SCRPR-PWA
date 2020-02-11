@@ -107,7 +107,8 @@ export default function FavoritesGamesEditPage(props) {
         setPriceMax({value: Number(data.price_max) || 0});
         setPSPlusPrice({value: data.psplus_price || false});
         setDiscountPrice({value: data.initial_price || false});
-        setFree({value: data.free || false})
+        setFree({value: data.free || false});
+        setNotification({value: data.notification_freq});
         setLoading({value: false});
       })
   }
