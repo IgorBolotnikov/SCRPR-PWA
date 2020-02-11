@@ -12,6 +12,7 @@ export const CHANGE_PASSWORD_URL = '/user/update-password';
 export const RESET_PASSWORD_URL = '/password_reset/';
 export const RESET_PASSWORD_CONFIRM_URL = '/password_reset/confirm/';
 export const RESET_PASSWORD_VALIDATE_URL = '/password_reset/validate_token/';
+export const RATE_URL = '/rate'
 
 export const JOBS_URL = "/jobs?";
 
