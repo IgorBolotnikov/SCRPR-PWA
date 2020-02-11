@@ -30,6 +30,16 @@ input, textarea, select, option {
   appearance: none;
 }
 
+.text_success {
+  text-align: center;
+  color: rgb(1, 150, 1);
+}
+
+.text_grey {
+  text-align: center;
+  color: grey;
+}
+
 ::selection {
   background-color: #ff4d4d;
   color: white;
@@ -60,6 +70,17 @@ input, textarea, select, option {
   margin: 15px;
 }
 
+.warning_message {
+  color: #d80000;
+  text-align: center;
+}
+
+.button_options {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
 .message_404_container {
   padding-top: 15px;
   width: 100%;
@@ -71,7 +92,7 @@ input, textarea, select, option {
 
 .message_404 {
   font-size: 100px;
-  min-width: 300px;
+  min-width: 220px;
   text-align: center;
   border-bottom: 2px solid #333333;
   margin: 20px 20px 50px 20px;
@@ -200,11 +221,6 @@ input, textarea, select, option {
   font-family: 'Livvic', sans-serif;
   color: white;
   width: auto;
-}
-
-.logo:hover {
-  background-color: inherit;
-  color: white;
 }
 
 .source_code {
@@ -748,6 +764,7 @@ input, textarea, select, option {
 .results_container {
   display: block;
   margin: 0px 15px;
+  min-height: 250px;
 }
 
 .results_list_jobs {
@@ -1031,7 +1048,7 @@ input, textarea, select, option {
   display: block;
 }
 
-.input_error input, textarea {
+.input_error {
   border-color: rgb(200, 1, 1);
 }
 
@@ -1041,11 +1058,12 @@ input, textarea, select, option {
 }
 
 .auth_redirect {
-  padding-left: 1em;
+  padding-left: 0.5em;
   display: inline-block;
   text-align: center;
   vertical-align: middle;
   color: grey;
+  word-wrap: break-word;
 }
 
 .login_redirect {
@@ -1059,6 +1077,74 @@ input, textarea, select, option {
 .auth_link {
   color: black;
   color: #ff4d4d;
+}
+
+.account_image_label {
+  height: 17px;
+  display: block;
+  text-align: center;
+  margin: 15px auto 0 auto;
+  width: calc(100% - 20px);
+}
+
+.account_image_field {
+  height: 18px;
+  display: block;
+  margin: 10px auto 10px auto;
+  width: auto;
+}
+
+.additional_options {
+  margin-top: 40px;
+  display: flex;
+  border-top: 1px solid #cccccc;
+}
+
+.edit_account_button {
+  display: block;
+  margin-top: 15px;
+  width: calc(100% + 8px - 30px);
+  text-align: center;
+}
+
+.account_button {
+  display: block;
+  margin-top: 15px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.account_form {
+  display: inline-block;
+  margin: auto;
+  height: 55px;
+  transition: height 0.2s;
+  overflow: hidden;
+  width: 100%;
+}
+
+.update_form {
+  width: 100%;
+  display: inline-block;
+}
+
+.account_label {
+  margin-top: 10px;
+  margin-bottom: -10px;
+  display: block;
+  text-align: center;
+}
+
+.danger_button {
+  width: auto;
+  font-size: 20px;
+  padding: .5em;
+  border: 1px solid #c00000;
+  background-color: white;
+  color: #c00000;
+  cursor: pointer;
+  transition: background-color, color;
+  transition: 0.2s, 0.2s;
 }
 
 /* ===== FAVORITES PAGE ===== */
@@ -1119,56 +1205,6 @@ input, textarea, select, option {
 
 }
 
-.account_button {
-  display: block;
-  margin-top: 15px;
-  width: calc(100% + 8px - 30px);
-  text-align: center;
-}
-
-.account_form {
-  display: inline-block;
-  margin: auto;
-  height: 55px;
-  transition: height 0.2s;
-  overflow: hidden;
-  width: 100%;
-}
-
-.update_form {
-  width: 100%;
-  display: inline-block;
-}
-
-.open {
-  height: 415px;
-}
-
-.account_label {
-  margin-top: 10px;
-  margin-bottom: 2px;
-  display: block;
-}
-
-.account_field {
-  width: calc(100% - 30px);
-}
-
-.account_image_label {
-  height: 17px;
-  display: inline-block;
-  margin: 15px auto 0 auto;
-  width: calc(100% - 20px);
-  line-height: 1.0;
-}
-
-.account_image_field {
-  height: 18px;
-  display: inline-block;
-  margin: 10px auto 5px auto;
-  width: auto;
-}
-
 .favorites_container {
   box-sizing: border-box;
   margin: auto;
@@ -1218,6 +1254,11 @@ input, textarea, select, option {
 
 .favorites_field_city_filter {
   margin-left: -10px;
+}
+
+.favorites_field div {
+  margin: 0px;
+  width: 100%;
 }
 
 .favorites_field input {
@@ -1454,6 +1495,17 @@ input, textarea, select, option {
     color: #ff4d4d;
   }
 
+  .danger_button:hover {
+    background-color: #c00000;
+    color: white;
+    cursor: pointer;
+  }
+
+  .logo:hover {
+    background-color: inherit;
+    color: white;
+  }
+
   #filters_button {
     display: inline-block;
   }
@@ -1664,6 +1716,14 @@ input, textarea, select, option {
 
 }
 
+@media (max-width: 460px) {
+
+  .additional_options {
+    flex-direction: column;
+  }
+
+}
+
 @media (min-width: 1318px) {
 
   .features_header {
@@ -1698,7 +1758,7 @@ input, textarea, select, option {
   position: relative;
   top: calc(100px);
   left: calc(50% - 48px);
-  display: inline-block;
+  display: block;
   width: 0px;
   height: 0px;
 }
@@ -1724,4 +1784,13 @@ input, textarea, select, option {
 
 .loading {
   opacity: 0.5;
+}
+
+@media (max-width: 360px) {
+  .auth_redirect {
+    display: block;
+    padding-left: 0px;
+    padding-top: 15px;
+    margin: auto;
+  }
 }

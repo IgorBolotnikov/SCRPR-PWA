@@ -1,40 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { API_URL } from './../App';
 
-const NEWS_URL = '/news';
+import { API_URL, NEWS_URL } from './../constants';
+import { toLocalDate, toLocalTime } from './../helpers';
 
 export default function NewsPage(props) {
-  let [news, setNews] = useState({posts: []});
-
-  // useEffect(() => {
-  //   fetch(API_URL + NEWS_URL)
-  //     .then(response => response.json())
-  //     .then(data => setNews(data));
-  // }, [])
+  let [news, setNews] = useState({pagination: {}, results: []});
 
   useEffect(() => {
-    setNews({posts: [
+    fetch(
+      API_URL + NEWS_URL,
       {
-        id: 2,
-        datetimePosted: "2020.01.02",
-        title: "Hello Again!",
-        body: "Let's try to <em>emphasize</em> the text!"
-      },
-      {
-        id: 1,
-        datetimePosted: "2020.01.01",
-        title: "Hello, World!",
-        body: "This is a medssage body with <b>BOLD</b> text."
-      },
-    ]})
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(response => response.json())
+      .then(data => setNews(data));
   }, [])
 
   return (
     <ul className="news_list">
-      {news.posts.map(post => {
+      {news.results && news.results.map(post => {
         return (
           <li key={post.id} className="window">
-            <p className="posted_datetime">Posted on {post.datetimePosted}</p>
+            <p className="posted_datetime">Posted on {toLocalDate(post.datetime_posted)} at {toLocalTime(post.datetime_posted)}</p>
             <p className="post_title">{post.title}</p>
             <div
               className="post_body"

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { API_URL } from './../App';
+import { API_URL, FAVORITES_URL } from './../constants';
 // Components
 import {
   SearchBarGames,
@@ -8,6 +8,7 @@ import {
   FiltersList
 } from './../components/searchBar';
 import Pagination from './../components/pagination';
+import useUserStore from './../userStore';
 
 const GAMES_URL = "/games?";
 
@@ -21,6 +22,7 @@ export default function GamesPage(props) {
   let [discountPrice, setDiscountPrice] = useState({value: false});
   let [free, setFree] = useState({value: false});
   let [page, setPage] = useState({value: 1});
+  const user = useUserStore();
 
   function getQueryString() {
     var params = {};
@@ -53,7 +55,6 @@ export default function GamesPage(props) {
 
   function fetchGames() {
     const URL = API_URL + GAMES_URL + getQueryString();
-    console.log(URL);
     window.scrollTo(0, 0);
     setLoading({value: true});
     fetch(URL, { headers: {
@@ -75,11 +76,19 @@ export default function GamesPage(props) {
   }
 
   function handlePriceMinChange(event) {
-    setPriceMin({value: event.target.value});
+    if (event.target.value < 0) {
+      setPriceMin({value: 0});
+    } else {
+      setPriceMin({value: event.target.value});
+    }
   }
 
   function handlePriceMaxChange(event) {
+  if (event.target.value < 0) {
+    setPriceMax({value: 0});
+  } else {
     setPriceMax({value: event.target.value});
+  }
   }
 
   function handlePSPlusPriceChange(event) {
@@ -97,6 +106,36 @@ export default function GamesPage(props) {
   function handleSubmit(event) {
     event.preventDefault();
     fetchGames();
+  }
+
+  function handleSaveToFavorites(event) {
+    event.preventDefault();
+    fetch(API_URL + FAVORITES_URL + '/games/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `JWT ${localStorage.getItem('token')}`,
+      },
+      body: JSON.stringify({
+        title: title.value,
+        price_min: priceMin.value,
+        price_max: priceMax.value,
+        psplus_price: PSPlusPrice.value,
+        initial_price: discountPrice.value,
+        free: free.value
+      })
+    })
+    .then(response => response.json().then(data => ({status: response.status, data: data})))
+    .then(data => {
+      if (data.status === 201) {
+        console.log(data);
+        console.log("Created!");
+      } else {
+        console.log(data);
+        console.log("Not created!");
+      }
+    })
+    .catch(error => console.error('Error:', error));
   }
 
   useEffect(() => {
@@ -152,6 +191,11 @@ export default function GamesPage(props) {
             />
           </FiltersTabGames>
         </form>
+        { user.isAuthenticated && (
+          <div className="add_to_favorites_container">
+            <input type="submit" onClick={handleSaveToFavorites} className="big_button save_to_favorites_button" value="Save to Favorites"/>
+          </div>
+        )}
       </div>
 
       <div className="results_container">
@@ -161,24 +205,25 @@ export default function GamesPage(props) {
           ""
         )}
         {games.results.length > 0 ? (
-          <ul className={loading.value ? (
+          <React.Fragment>
+            <ul className={loading.value ? (
               "results_list_games loading"
-          ) : (
+            ) : (
               "results_list_games"
-          )}>
-            {games.results.map(result => <GameCard result={result} key={result.link}/>)}
-          </ul>
+            )}>
+              {games.results.map(result => <GameCard result={result} key={result.link}/>)}
+            </ul>
+            {games.pagination.last_page && games.pagination.last_page !== 1 ? (
+              <Pagination
+                page={games.pagination.page}
+                prevPage={games.pagination.prev_page}
+                nextPage={games.pagination.next_page}
+                lastPage={games.pagination.last_page}
+                onPageChange={handleDiffPage}
+              />
+            ) : ("")}
+          </React.Fragment>
         ) : (loading.value ? ("") : (<h1 className="no_results">No results :(</h1>))}
-
-        {games.pagination.last_page && games.pagination.last_page !== 1 ? (
-          <Pagination
-            page={games.pagination.page}
-            prevPage={games.pagination.prev_page}
-            nextPage={games.pagination.next_page}
-            lastPage={games.pagination.last_page}
-            onPageChange={handleDiffPage}
-          />
-        ) : ("")}
       </div>
     </React.Fragment>
   );
@@ -196,7 +241,7 @@ function GameCard(props) {
           {props.result.initial_price !== null ? (
             <div className="list_price strikethrough">{props.result.initial_price} UAH</div>
           ) : ("")}
-          {props.result.price !==0 ? (
+          {props.result.price !== 0 ? (
             <div className="list_price">{props.result.price} UAH</div>
           ) : ("")}
           {props.result.psplus_price !== null ? (props.result.psplus_price === 0 ? (
