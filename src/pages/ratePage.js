@@ -1,20 +1,33 @@
 import React, { useState } from 'react';
+import { API_URL, RATE_URL } from './../constants';
 
 export default function RatePage(props) {
-  let [name, setName] = useState({value: ""})
-  let [comment, setComment] = useState({value: ""})
+  const [name, setName] = useState({value: ""});
+  const [comment, setComment] = useState({value: ""});
+  const [formErrors, setFormErrors] = useState({ name: [], comment: [] });
 
   function handleNameChange(event) {
-    setName({value: event.target.value})
+    setName({value: event.target.value});
   }
 
   function handleCommentChange(event) {
-    setComment({value: event.target.value})
+    setComment({value: event.target.value});
+    console.log(comment.value);
   }
 
   function handleSubmit(event) {
-    // TODO: Send comment to API
     event.preventDefault();
+    fetch(API_URL + RATE_URL, {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        name: name.value,
+        comment:comment.value
+      })
+    })
+      .then(response => alert("Your comment was sent, thank you!"))
   }
 
   return (
