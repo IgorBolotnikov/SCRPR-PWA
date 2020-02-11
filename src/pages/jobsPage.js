@@ -117,11 +117,7 @@ export default function JobsPage(props) {
     .then(response => response.json().then(data => ({status: response.status, data: data})))
     .then(data => {
       if (data.status === 201) {
-        console.log(data);
-        console.log("Created!");
       } else {
-        console.log(data);
-        console.log("Not created!");
       }
     })
     .catch(error => console.error('Error:', error));

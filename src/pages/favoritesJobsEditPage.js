@@ -56,7 +56,6 @@ export default function FavoritesJobsEditPage(props) {
 
   function handleSubmit(event) {
     event.preventDefault();
-    console.log(notification.text);
     fetch(API_URL + FAVORITES_URL + '/jobs/' + id + "/", {
       method: 'PUT',
       headers: {
@@ -75,11 +74,7 @@ export default function FavoritesJobsEditPage(props) {
     .then(response => response.json().then(data => ({status: response.status, data: data})))
     .then(data => {
       if (data.status === 200) {
-        console.log(data);
-        console.log("Created!");
       } else {
-        console.log(data);
-        console.log("Not created!");
       }
     })
     .catch(error => console.error('Error:', error));
@@ -87,7 +82,6 @@ export default function FavoritesJobsEditPage(props) {
 
   function fetchFavoriteGame() {
     const URL = API_URL + FAVORITES_URL + "/jobs/" + id + "/";
-    console.log(URL);
     window.scrollTo(0, 0);
     setLoading({value: true});
     fetch(URL, { headers: {
@@ -100,12 +94,20 @@ export default function FavoritesJobsEditPage(props) {
         setSalaryMin({value: Number(data.salary_min) || 0});
         setSalaryMax({value: Number(data.salary_max) || 0});
         setWithSalary({value: data.psplus_salary || false});
+        setNotification({value: data.notification_freq});
         setLoading({value: false});
       })
   }
 
   function deleteFavoriteJob(event) {
-    console.log("Deleted entry");
+    const URL = API_URL + FAVORITES_URL + "/jobs/" + id + "/";
+    fetch(URL, {
+      method: 'DELETE',
+      'headers': {
+        'Content-Type': 'application/json',
+        'Authorization': `JWT ${localStorage.getItem('token')}`,
+      }
+    })
   }
 
   useEffect(() => {
