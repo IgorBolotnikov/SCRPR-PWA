@@ -25,7 +25,6 @@ export default function FavoritesPage(props) {
       })
       .then(response => response.json())
       .then(data => {
-        console.log(data);
         setFavoritesGames(data);
         setLoadingGames({value: false})
       });
@@ -44,7 +43,6 @@ export default function FavoritesPage(props) {
       })
       .then(response => response.json())
       .then(data => {
-        console.log(data);
         setFavoritesJobs(data);
         setLoadingJobs({value: false})
       });

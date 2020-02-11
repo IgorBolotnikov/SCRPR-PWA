@@ -75,7 +75,6 @@ export default function LoginPage(props) {
         if (object.status === 200) {
           localStorage.setItem('token', object.data.token);
           setHasErrors(false);
-          console.log(object.data.user);
           user.update(object.data.user);
         } else if (object.status === 400) {
           if (object.data.non_field_errors) {
@@ -95,8 +94,6 @@ export default function LoginPage(props) {
   // For redirecting back to previous page
   let location = useLocation();
   let { from } = location.state || { from: { pathname: "/" } };
-
-  console.log(user);
 
   return user.isAuthenticated ? (
     <Redirect to={from.pathname} />

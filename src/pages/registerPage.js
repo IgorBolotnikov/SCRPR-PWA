@@ -102,9 +102,7 @@ export default function RegisterPage(props) {
   function handleSubmit(event) {
     event.preventDefault();
     const formValid = validateForm();
-    console.log(formValid);
     if (!formValid) {
-      console.log("Form is invalid");
       return;
     }
     fetch(API_URL + CREATE_USER_URL, {
