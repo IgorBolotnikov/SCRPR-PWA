@@ -1,9 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-// Images
-import GamesImage from './../Img/Icons/games.png';
-import JobsImage from './../Img/Icons/jobs.png';
-import FreelanceImage from './../Img/Icons/freelance.png';
+import GamesImage from 'src/Img/Icons/games.png';
+import JobsImage from 'src/Img/Icons/jobs.png';
+import FreelanceImage from 'src/Img/Icons/freelance.png';
 
 export default function IndexPage(props) {
   return (

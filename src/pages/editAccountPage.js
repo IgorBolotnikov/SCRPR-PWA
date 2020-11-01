@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom';
 import {
   AuthField,
   AuthWindow
-} from './../components/authForms';
-import { API_URL, USER_URL } from './../constants';
-import useUserStore from './../userStore';
+} from 'src/components/authForms';
+import { apiUrl, userUrl } from 'src/constants';
+import useUserStore from 'src/userStore';
 
 export default function EditAccountPage(props) {
   const user = useUserStore();
@@ -93,7 +93,7 @@ export default function EditAccountPage(props) {
     if (!formValid) {
       return;
     }
-    fetch(API_URL + USER_URL, {
+    fetch(apiUrl + userUrl, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

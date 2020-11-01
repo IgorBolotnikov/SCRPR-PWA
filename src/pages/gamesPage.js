@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { API_URL, FAVORITES_URL } from './../constants';
-// Components
+import { apiUrl, favoritesUrl } from 'src/constants';
 import {
   SearchBarGames,
   CheckBoxFilterField,
   NumericFilterField,
   FiltersList
-} from './../components/searchBar';
-import Pagination from './../components/pagination';
-import useUserStore from './../userStore';
+} from 'src/components/searchBar';
+import Pagination from 'src/components/pagination';
+import useUserStore from 'src/userStore';
 
 const GAMES_URL = "/games?";
 
@@ -54,7 +53,7 @@ export default function GamesPage(props) {
   }
 
   function fetchGames() {
-    const URL = API_URL + GAMES_URL + getQueryString();
+    const URL = apiUrl + GAMES_URL + getQueryString();
     window.scrollTo(0, 0);
     setLoading({value: true});
     fetch(URL, { headers: {
@@ -110,7 +109,7 @@ export default function GamesPage(props) {
 
   function handleSaveToFavorites(event) {
     event.preventDefault();
-    fetch(API_URL + FAVORITES_URL + '/games/', {
+    fetch(apiUrl + favoritesUrl + '/games/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

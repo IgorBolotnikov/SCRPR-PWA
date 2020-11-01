@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { API_URL, RATE_URL } from './../constants';
+import { apiUrl, rateUrl } from '../constants';
 
 export default function RatePage(props) {
   const [name, setName] = useState({value: ""});
@@ -17,7 +17,7 @@ export default function RatePage(props) {
 
   function handleSubmit(event) {
     event.preventDefault();
-    fetch(API_URL + RATE_URL, {
+    fetch(apiUrl + rateUrl, {
       method: 'POST',
       headers: {
         'Content-type': 'application/json'

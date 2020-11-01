@@ -3,8 +3,8 @@ import {
   AuthField,
   AuthWindow,
   AuthButton
-} from './../components/authForms';
-import { API_URL, CHANGE_PASSWORD_URL } from './../constants';
+} from 'src/components/authForms';
+import { apiUrl, changePasswordUrl } from 'src/constants';
 
 export default function ChangePasswordPage(props) {
   const [oldPassword, setOldPassword] = useState({value: ""});
@@ -80,7 +80,7 @@ export default function ChangePasswordPage(props) {
     if (!formValid) {
       return;
     }
-    fetch(API_URL + CHANGE_PASSWORD_URL, {
+    fetch(apiUrl + changePasswordUrl, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

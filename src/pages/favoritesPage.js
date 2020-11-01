@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-import SideBar from './../components/sideBar';
-import useUserStore from './../userStore';
-import { API_URL, FAVORITES_URL } from './../constants';
+import SideBar from 'src/components/sideBar';
+import useUserStore from 'src/userStore';
+import { apiUrl, favoritesUrl } from 'src/constants';
 
 export default function FavoritesPage(props) {
   const [loadingGames, setLoadingGames] = useState({value: false});
@@ -15,7 +15,7 @@ export default function FavoritesPage(props) {
   function fetchFavoritesGames() {
     setLoadingGames({value: true});
     fetch(
-      API_URL + FAVORITES_URL + "/games/",
+      apiUrl + favoritesUrl + "/games/",
       {
         method: 'GET',
         headers: {
@@ -33,7 +33,7 @@ export default function FavoritesPage(props) {
   function fetchFavoritesJobs() {
     setLoadingJobs({value: true});
     fetch(
-      API_URL + FAVORITES_URL + "/jobs/",
+      apiUrl + favoritesUrl + "/jobs/",
       {
         method: 'GET',
         headers: {

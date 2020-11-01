@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import SideBar from './../components/sideBar';
+import SideBar from 'src/components/sideBar';
 import {
   NumericFilterField,
   CheckBoxFilterField
-} from './../components/searchBar';
-import { API_URL, NOTIFICATION_OPTIONS, FAVORITES_URL } from './../constants';
+} from 'src/components/searchBar';
+import { apiUrl, notificationOptions, favoritesUrl } from 'src/constants';
 
 export default function FavoritesGamesEditPage(props) {
   const { id } = useParams();
@@ -56,7 +56,7 @@ export default function FavoritesGamesEditPage(props) {
 
   function handleSubmit(event) {
     event.preventDefault();
-    fetch(API_URL + FAVORITES_URL + "/games/" + id + "/", {
+    fetch(apiUrl + favoritesUrl + "/games/" + id + "/", {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -82,7 +82,7 @@ export default function FavoritesGamesEditPage(props) {
   }
 
   function deleteFavoriteGame(event) {
-    const URL = API_URL + FAVORITES_URL + "/games/" + id + "/";
+    const URL = apiUrl + favoritesUrl + "/games/" + id + "/";
     fetch(URL, {
       method: 'DELETE',
       'headers': {
@@ -93,7 +93,7 @@ export default function FavoritesGamesEditPage(props) {
   }
 
   function fetchFavoriteGame() {
-    const URL = API_URL + FAVORITES_URL + "/games/" + id + "/";
+    const URL = apiUrl + favoritesUrl + "/games/" + id + "/";
     window.scrollTo(0, 0);
     setLoading({value: true});
     fetch(URL, { headers: {
@@ -203,7 +203,7 @@ export default function FavoritesGamesEditPage(props) {
                   value={notification.value}
                   onChange={handleNotificationChange}
                 >
-                  {Object.entries(NOTIFICATION_OPTIONS).map(([key, value]) => (
+                  {Object.entries(notificationOptions).map(([key, value]) => (
                     <option value={key} key={key}>{value}</option>
                   ))}
                 </select>

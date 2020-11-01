@@ -4,12 +4,12 @@ import {
   AuthField,
   AuthWindow,
   AuthButton
-} from './../../components/authForms';
+} from 'src/components/authForms';
 import {
-  API_URL,
-  RESET_PASSWORD_CONFIRM_URL,
-  RESET_PASSWORD_VALIDATE_URL
-} from './../../constants';
+  apiUrl,
+  resetPasswordConfirmUrl,
+  resetPasswordValidateUrl
+} from 'src/constants';
 
 export default function ResetRequest(props) {
   const [password, setPassword] = useState({value: ""});
@@ -65,7 +65,7 @@ export default function ResetRequest(props) {
   }
 
   function validateToken() {
-    fetch(API_URL + RESET_PASSWORD_VALIDATE_URL, {
+    fetch(apiUrl + resetPasswordValidateUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -88,7 +88,7 @@ export default function ResetRequest(props) {
     if (!formValid) {
       return;
     }
-    fetch(API_URL + RESET_PASSWORD_CONFIRM_URL, {
+    fetch(apiUrl + resetPasswordConfirmUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

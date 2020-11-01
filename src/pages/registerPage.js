@@ -1,39 +1,35 @@
 import React, { useState } from 'react';
-import {
-  AuthField,
-  AuthWindow,
-  AuthButton
-} from './../components/authForms';
-import useUserStore from './../userStore';
-import { API_URL, CREATE_USER_URL } from './../constants';
+import { AuthButton, AuthField, AuthWindow } from 'src/components/authForms';
+import { apiUrl, createUserUrl } from 'src/constants';
+import useUserStore from 'src/userStore';
 
 export default function RegisterPage(props) {
-  const [username, setUsername] = useState({value: ""});
-  const [email, setEmail] = useState({value: ""});
-  const [password, setPassword] = useState({value: ""});
-  const [confirmPassword, setConfirmPassword] = useState({value: ""});
+  const [username, setUsername] = useState({ value: '' });
+  const [email, setEmail] = useState({ value: '' });
+  const [password, setPassword] = useState({ value: '' });
+  const [confirmPassword, setConfirmPassword] = useState({ value: '' });
   const [formErrors, setFormErrors] = useState({
     username: [],
     email: [],
     password: [],
-    confirmPassword: []
+    confirmPassword: [],
   });
   const user = useUserStore();
 
   function handleUsernameChange(event) {
-    setUsername({value: event.target.value});
+    setUsername({ value: event.target.value });
   }
 
   function handleEmailChange(event) {
-    setEmail({value: event.target.value});
+    setEmail({ value: event.target.value });
   }
 
   function handlePasswordChange(event) {
-    setPassword({value: event.target.value});
+    setPassword({ value: event.target.value });
   }
 
   function handleConfirmPasswordChange(event) {
-    setConfirmPassword({value: event.target.value});
+    setConfirmPassword({ value: event.target.value });
   }
 
   function validateUsername() {
@@ -73,8 +69,8 @@ export default function RegisterPage(props) {
   }
 
   function validateConfirmPassword() {
-    let errors = []
-    if  (password.value !== confirmPassword.value) {
+    let errors = [];
+    if (password.value !== confirmPassword.value) {
       errors.push('Passwords must match');
     }
     return errors;
@@ -94,8 +90,8 @@ export default function RegisterPage(props) {
       username: usernameErrors,
       email: emailErrors,
       password: passwordErrors,
-      confirmPassword: confirmPasswordErrors
-    })
+      confirmPassword: confirmPasswordErrors,
+    });
     return formValid;
   }
 
@@ -105,7 +101,7 @@ export default function RegisterPage(props) {
     if (!formValid) {
       return;
     }
-    fetch(API_URL + CREATE_USER_URL, {
+    fetch(apiUrl + createUserUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -113,10 +109,13 @@ export default function RegisterPage(props) {
       body: JSON.stringify({
         username: username.value,
         email: email.value,
-        password: password.value
-      })
+        password: password.value,
+      }),
     })
-      .then(response => response.json().then(data => ({status: response.status, data: data})))
+      .then(response => response.json().then(data => ({
+        status: response.status,
+        data: data,
+      })))
       .then(object => {
         if (object.status === 201) {
           localStorage.setItem('token', object.data.token);
@@ -126,8 +125,8 @@ export default function RegisterPage(props) {
             username: object.data.username || [],
             email: object.data.email || [],
             password: object.data.password || [],
-            confirmPassword: []
-          })
+            confirmPassword: [],
+          });
         }
       })
       .catch(error => console.error('Error:', error));
@@ -168,8 +167,8 @@ export default function RegisterPage(props) {
           value={confirmPassword.value}
           errors={formErrors.confirmPassword}
         />
-        <AuthButton value="SUBMIT"/>
-        <div className='auth_redirect'>
+        <AuthButton value="SUBMIT" />
+        <div className="auth_redirect">
           Already have an account? <a className="auth_link" href="/auth/login/">Log In</a>
         </div>
       </form>

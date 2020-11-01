@@ -1,13 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-// Import global user state ptovider
+// Import global user state provider
 import { UserStoreProvider } from './userStore';
 
 // Wrap the whole app so that user data can be used everywhere
-function WrappedApp(props) {
+function WrappedApp() {
   return (
     <UserStoreProvider>
       <App />

@@ -3,8 +3,8 @@ import {
   AuthField,
   AuthWindow,
   AuthButton
-} from './../../components/authForms';
-import { API_URL, RESET_PASSWORD_URL } from './../../constants';
+} from 'src/components/authForms';
+import { apiUrl, resetPasswordUrl } from 'src/constants';
 
 export default function ResetRequest(props) {
   const [email, setEmail] = useState({value: ""});
@@ -41,7 +41,7 @@ export default function ResetRequest(props) {
     if (!formValid) {
       return;
     }
-    fetch(API_URL + RESET_PASSWORD_URL, {
+    fetch(apiUrl + resetPasswordUrl, {
       method: 'POST',
       headers: {
         'Content-type': 'application/json'

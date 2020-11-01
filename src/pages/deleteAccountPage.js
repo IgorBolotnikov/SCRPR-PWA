@@ -1,15 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { AuthWindow } from './../components/authForms';
-import { API_URL, USER_URL } from './../constants';
-import useUserStore from './../userStore';
+import { AuthWindow } from 'src/components/authForms';
+import { apiUrl, userUrl } from 'src/constants';
+import useUserStore from 'src/userStore';
 
 export default function DeleteAccountPage(props) {
   const user = useUserStore();
 
   function handleSubmit(event) {
     event.prevertDefault();
-    fetch(API_URL + USER_URL, {
+    fetch(apiUrl + userUrl, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',

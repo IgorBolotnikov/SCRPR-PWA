@@ -1,13 +1,13 @@
 import React, { createContext, useReducer, useContext } from 'react';
 
-const UserContext = createContext();
-
 const InitialUserStore = {
   username: "",
   email: "",
   image: "",
   isAuthenticated: false
 }
+
+const UserContext = createContext(InitialUserStore);
 
 const ACTIONS = {
   UPDATE_USER: 'UPDATE_USER',
@@ -17,7 +17,6 @@ const ACTIONS = {
 function UserReducer(state, action) {
   switch (action.type) {
     case ACTIONS.UPDATE_USER:
-      console.log(action.payload);
       return {
         username: action.payload.username,
         email: action.payload.email,

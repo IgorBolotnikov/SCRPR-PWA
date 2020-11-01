@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import SideBar from './../components/sideBar';
+import SideBar from 'src/components/sideBar';
 import {
   NumericFilterField,
   CheckBoxFilterField
-} from './../components/searchBar';
+} from 'src/components/searchBar';
 import {
-  API_URL,
-  NOTIFICATION_OPTIONS,
-  FAVORITES_URL,
-  CITIES
-} from './../constants';
+  apiUrl,
+  notificationOptions,
+  favoritesUrl,
+  cities
+} from 'src/constants';
 
 export default function FavoritesJobsEditPage(props) {
   const { id } = useParams();
@@ -56,7 +56,7 @@ export default function FavoritesJobsEditPage(props) {
 
   function handleSubmit(event) {
     event.preventDefault();
-    fetch(API_URL + FAVORITES_URL + '/jobs/' + id + "/", {
+    fetch(apiUrl + favoritesUrl + '/jobs/' + id + "/", {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -81,7 +81,7 @@ export default function FavoritesJobsEditPage(props) {
   }
 
   function fetchFavoriteGame() {
-    const URL = API_URL + FAVORITES_URL + "/jobs/" + id + "/";
+    const URL = apiUrl + favoritesUrl + "/jobs/" + id + "/";
     window.scrollTo(0, 0);
     setLoading({value: true});
     fetch(URL, { headers: {
@@ -100,7 +100,7 @@ export default function FavoritesJobsEditPage(props) {
   }
 
   function deleteFavoriteJob(event) {
-    const URL = API_URL + FAVORITES_URL + "/jobs/" + id + "/";
+    const URL = apiUrl + favoritesUrl + "/jobs/" + id + "/";
     fetch(URL, {
       method: 'DELETE',
       'headers': {
@@ -159,7 +159,7 @@ export default function FavoritesJobsEditPage(props) {
                   value={city.value}
                   onChange={handleCityChange}
                 >
-                  {CITIES.map(city => (
+                  {cities.map(city => (
                     <option value={city.value} key={city.value}>{city.text}</option>
                   ))}
                 </select>
@@ -198,7 +198,7 @@ export default function FavoritesJobsEditPage(props) {
                   value={notification.value}
                   onChange={handleNotificationChange}
                 >
-                  {Object.entries(NOTIFICATION_OPTIONS).map(([key, value]) => (
+                  {Object.entries(notificationOptions).map(([key, value]) => (
                     <option value={key} key={key}>{value}</option>
                   ))}
                 </select>

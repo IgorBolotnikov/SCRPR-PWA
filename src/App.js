@@ -1,59 +1,56 @@
 import React, { useEffect, useRef } from 'react';
-// Routing
 import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link
-} from "react-router-dom";
-import PrivateRoute from './privateRoute';
-// Pages
-import IndexPage from './pages/indexPage';
-import NewsPage from './pages/newsPage';
-import AboutPage from './pages/aboutPage';
-import RatePage from './pages/ratePage';
-import JobsPage from './pages/jobsPage';
-import GamesPage from './pages/gamesPage';
-import LoginPage from './pages/loginPage';
-import RegisterPage from './pages/registerPage';
-import ResetRequest from './pages/passwordReset/resetRequest';
-import ResetPassword from './pages/passwordReset/resetPassword';
-import FavoritesPage from './pages/favoritesPage';
-import EditAccountPage from './pages/editAccountPage';
-import ChangePasswordPage from './pages/changePasswordPage';
-import DeleteAccountPage from './pages/deleteAccountPage';
-import FavoritesGamesEditPage from './pages/favoritesGamesEditPage';
-import FavoritesJobsEditPage from './pages/favoritesJobsEditPage';
+  Link,
+} from 'react-router-dom';
 
-import NoMatchesPage from './pages/noMatchesPage';
-// Components
-import Navbar from './components/navbar';
-import Footer from './components/footer';
-// Context
-import useUserStore from './userStore';
-
-import { API_URL, REFRESH_TOKEN_URL, JWT_REFRESH_TIME } from './constants';
+import PrivateRoute from 'src/privateRoute';
+import IndexPage from 'src/pages/indexPage';
+import NewsPage from 'src/pages/newsPage';
+import AboutPage from 'src/pages/aboutPage';
+import RatePage from 'src/pages/ratePage';
+import JobsPage from 'src/pages/jobsPage';
+import GamesPage from 'src/pages/gamesPage';
+import LoginPage from 'src/pages/loginPage';
+import RegisterPage from 'src/pages/registerPage';
+import ResetRequest from 'src/pages/passwordReset/resetRequest';
+import ResetPassword from 'src/pages/passwordReset/resetPassword';
+import FavoritesPage from 'src/pages/favoritesPage';
+import EditAccountPage from 'src/pages/editAccountPage';
+import ChangePasswordPage from 'src/pages/changePasswordPage';
+import DeleteAccountPage from 'src/pages/deleteAccountPage';
+import FavoritesGamesEditPage from 'src/pages/favoritesGamesEditPage';
+import FavoritesJobsEditPage from 'src/pages/favoritesJobsEditPage';
+import NoMatchesPage from 'src/pages/noMatchesPage';
+import Navbar from 'src/components/navbar';
+import Footer from 'src/components/footer';
+import useUserStore from 'src/userStore';
+import { apiUrl, refreshTokenUrl, jwtRefreshTime } from 'src/constants';
 
 function App() {
   const user = useUserStore();
-  let scheduledCallback = useRef();
+  const scheduledCallback = useRef();
 
   // Callback for scheduled JWT refreshment
   // When JWT expires or is not valid => reset all user data to blank values
   // If JWT is successfully refreshed => update user data with
   // received payload and update JWT
   function refreshToken() {
-    fetch(API_URL + REFRESH_TOKEN_URL, {
+    fetch(apiUrl + refreshTokenUrl, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify({token: localStorage.getItem("token")})
+      body: JSON.stringify({ token: localStorage.getItem('token') }),
     })
-      .then(response => response.json().then(data => ({status: response.status, data: data})))
-      .then(object => {
+      .then((response) => response.json().then((data) => ({
+        status: response.status,
+        data,
+      })))
+      .then((object) => {
         if (object.status === 200) {
-          console.log('Response OK');
           localStorage.setItem('token', object.data.token);
           user.update(object.data.user);
         } else if (object.status === 400) {
@@ -61,17 +58,17 @@ function App() {
           user.reset();
         }
       })
-      .catch(error => console.error('Error:', error));
+      .catch((error) => {
+        throw new Error(`Error: ${error}`);
+      });
   }
 
   useEffect(() => {
     refreshToken();
-    console.log("Running useEffect!");
-    scheduledCallback.current = setInterval(refreshToken, JWT_REFRESH_TIME);
+    scheduledCallback.current = setInterval(refreshToken, jwtRefreshTime);
     return () => {
-      console.log("Cleaning useEffect!");
       clearInterval(scheduledCallback);
-    }
+    };
   }, []);
 
   return (
@@ -81,16 +78,18 @@ function App() {
         <li><Link className="navbutton first_item" to="/games">Games</Link></li>
         <li><Link className="navbutton second_item" to="/jobs">Jobs</Link></li>
         <li><Link className="navbutton third_item" to="/freelance">Freelance</Link></li>
-        { user.isAuthenticated ? (
-          <React.Fragment>
+        {user.isAuthenticated ? (
+          <>
             <li><Link className="navbutton" to="/favorites">My Account</Link></li>
-            <li><Link className="navbutton" to="/" onClick={user.reset}>Log Out</Link></li>
-          </React.Fragment>
+            <li>
+              <Link className="navbutton" to="/" onClick={user.reset}>Log Out</Link>
+            </li>
+          </>
         ) : (
-          <React.Fragment>
+          <>
             <li><Link className="navbutton" to="/auth/login">Log In</Link></li>
             <li><Link className="navbutton" to="/auth/register">Register</Link></li>
-          </React.Fragment>
+          </>
         )}
       </Navbar>
       <div className="content_container">
