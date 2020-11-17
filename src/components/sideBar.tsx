@@ -10,7 +10,11 @@ interface SudebarProps {
   email: string;
 }
 
-export default function SideBar({ image, username, email }: SudebarProps) {
+export default function SideBar({
+  image,
+  username,
+  email,
+}: SudebarProps): React.ReactElement {
   return (
     <div className="sidebar">
       <div className="window account_header">

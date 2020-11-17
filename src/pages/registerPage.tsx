@@ -1,82 +1,83 @@
 import React, { useState } from 'react';
+
 import { AuthButton, AuthField, AuthWindow } from 'src/components/authForms';
 import { apiUrl, createUserUrl } from 'src/constants';
 import useUserStore from 'src/userStore';
 
-export default function RegisterPage(props) {
-  const [username, setUsername] = useState({ value: '' });
-  const [email, setEmail] = useState({ value: '' });
-  const [password, setPassword] = useState({ value: '' });
-  const [confirmPassword, setConfirmPassword] = useState({ value: '' });
+export default function RegisterPage(): React.ReactElement {
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [formErrors, setFormErrors] = useState({
-    username: [],
-    email: [],
-    password: [],
-    confirmPassword: [],
+    username: [] as string[],
+    email: [] as string[],
+    password: [] as string[],
+    confirmPassword: [] as string[],
   });
   const user = useUserStore();
 
-  function handleUsernameChange(event) {
-    setUsername({ value: event.target.value });
+  function handleUsernameChange(event: React.ChangeEvent<HTMLInputElement>): void {
+    setUsername(event.target.value);
   }
 
-  function handleEmailChange(event) {
-    setEmail({ value: event.target.value });
+  function handleEmailChange(event: React.ChangeEvent<HTMLInputElement>): void {
+    setEmail(event.target.value);
   }
 
-  function handlePasswordChange(event) {
-    setPassword({ value: event.target.value });
+  function handlePasswordChange(event: React.ChangeEvent<HTMLInputElement>): void {
+    setPassword(event.target.value);
   }
 
-  function handleConfirmPasswordChange(event) {
-    setConfirmPassword({ value: event.target.value });
+  function handleConfirmPasswordChange(event: React.ChangeEvent<HTMLInputElement>): void {
+    setConfirmPassword(event.target.value);
   }
 
-  function validateUsername() {
-    let errors = [];
-    if (username.value.length > 150) {
+  function validateUsername(): string[] {
+    const errors = [];
+    if (username.length > 150) {
       errors.push('Username is too long');
     }
-    if (username.value.length === 0) {
+    if (username.length === 0) {
       errors.push('Username is required');
     }
     return errors;
   }
 
-  function validateEmail() {
-    let errors = [];
-    if (!(/\S+@\S+/).test(email.value)) {
+  function validateEmail(): string[] {
+    const errors = [];
+    if (!(/\S+@\S+/).test(email)) {
       errors.push('Please enter correct email');
     }
-    if (email.value.length > 254) {
+    if (email.length > 254) {
       errors.push('Email is too long');
     }
-    if (email.value.length === 0) {
+    if (email.length === 0) {
       errors.push('Email is required');
     }
     return errors;
   }
 
-  function validatePassword() {
-    let errors = [];
-    if (password.value.length > 0 && password.value.length < 8) {
+  function validatePassword(): string[] {
+    const errors = [];
+    if (password.length > 0 && password.length < 8) {
       errors.push('Password is too short');
     }
-    if (password.value.length === 0) {
+    if (password.length === 0) {
       errors.push('Password is required');
     }
     return errors;
   }
 
-  function validateConfirmPassword() {
-    let errors = [];
-    if (password.value !== confirmPassword.value) {
+  function validateConfirmPassword(): string[] {
+    const errors = [];
+    if (password !== confirmPassword) {
       errors.push('Passwords must match');
     }
     return errors;
   }
 
-  function validateForm() {
+  function validateForm(): boolean {
     const usernameErrors = validateUsername();
     const emailErrors = validateEmail();
     const passwordErrors = validatePassword();
@@ -95,7 +96,7 @@ export default function RegisterPage(props) {
     return formValid;
   }
 
-  function handleSubmit(event) {
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>): void {
     event.preventDefault();
     const formValid = validateForm();
     if (!formValid) {
@@ -106,17 +107,13 @@ export default function RegisterPage(props) {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        username: username.value,
-        email: email.value,
-        password: password.value,
-      }),
+      body: JSON.stringify({ username, email, password }),
     })
-      .then(response => response.json().then(data => ({
+      .then((response) => response.json().then((data) => ({
         status: response.status,
-        data: data,
+        data,
       })))
-      .then(object => {
+      .then((object) => {
         if (object.status === 201) {
           localStorage.setItem('token', object.data.token);
           user.update(object.data.user);
@@ -129,9 +126,10 @@ export default function RegisterPage(props) {
           });
         }
       })
-      .catch(error => console.error('Error:', error));
+      .catch((error) => {
+        throw new Error(error);
+      });
   }
-
 
   return (
     <AuthWindow
@@ -143,33 +141,35 @@ export default function RegisterPage(props) {
           type="text"
           placeholder="Username"
           onChange={handleUsernameChange}
-          value={username.value}
+          value={username}
           errors={formErrors.username}
         />
         <AuthField
           type="email"
           placeholder="Email"
           onChange={handleEmailChange}
-          value={email.value}
+          value={email}
           errors={formErrors.email}
         />
         <AuthField
           type="password"
           placeholder="Password"
           onChange={handlePasswordChange}
-          value={password.value}
+          value={password}
           errors={formErrors.password}
         />
         <AuthField
           type="password"
           placeholder="Confirm password"
           onChange={handleConfirmPasswordChange}
-          value={confirmPassword.value}
+          value={confirmPassword}
           errors={formErrors.confirmPassword}
         />
         <AuthButton value="SUBMIT" />
         <div className="auth_redirect">
-          Already have an account? <a className="auth_link" href="/auth/login/">Log In</a>
+          Already have an account?
+          {' '}
+          <a className="auth_link" href="/auth/login/">Log In</a>
         </div>
       </form>
     </AuthWindow>

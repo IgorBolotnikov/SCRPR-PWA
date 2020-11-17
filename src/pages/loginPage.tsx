@@ -5,43 +5,47 @@ import { AuthButton, AuthField, AuthWindow } from 'src/components/authForms';
 import { apiUrl, getTokenUrl } from 'src/constants';
 import useUserStore from 'src/userStore';
 
-export default function LoginPage() {
-  const [username, setUsername] = useState({ value: '' });
-  const [password, setPassword] = useState({ value: '' });
-  const [formErrors, setFormErrors] = useState({ username: [], password: [] });
+export default function LoginPage(): React.ReactElement {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [formErrors, setFormErrors] = useState<Record<string, string[]>>(
+    { username: [], password: [] },
+  );
   const user = useUserStore();
+  const location = useLocation<{from: { pathname: string }}>();
+  const { from } = location.state || { from: { pathname: '/' } };
 
-  function handleUsernameChange(event) {
-    setUsername({ value: event.target.value });
+  function handleUsernameChange(event: React.ChangeEvent<HTMLInputElement>): void {
+    setUsername(event.target.value);
   }
 
-  function handlePasswordChange(event) {
-    setPassword({ value: event.target.value });
+  function handlePasswordChange(event: React.ChangeEvent<HTMLInputElement>): void {
+    setPassword(event.target.value);
   }
 
-  function validateUsername() {
+  function validateUsername(): string[] {
     const errors = [];
-    if (username.value.length > 150) {
+    if (username.length > 150) {
       errors.push('Username is too long');
     }
-    if (username.value.length === 0) {
+    if (username.length === 0) {
       errors.push('Username is required');
     }
     return errors;
   }
 
-  function validatePassword() {
+  function validatePassword(): string[] {
     const errors = [];
-    if (password.value.length > 0 && password.value.length < 8) {
+    if (password.length > 0 && password.length < 8) {
       errors.push('Password is too short');
     }
-    if (password.value.length === 0) {
+    if (password.length === 0) {
       errors.push('Password is required');
     }
     return errors;
   }
 
-  function validateForm() {
+  function validateForm(): boolean {
     const usernameErrors = validateUsername();
     const passwordErrors = validatePassword();
     const usernameValid = usernameErrors.length === 0;
@@ -51,7 +55,7 @@ export default function LoginPage() {
     return formValid;
   }
 
-  function handleSubmit(event) {
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>): void {
     event.preventDefault();
     const formValid = validateForm();
     if (!formValid) {
@@ -62,7 +66,7 @@ export default function LoginPage() {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ username: username.value, password: password.value }),
+      body: JSON.stringify({ username, password }),
     })
       .then((response) => response.json().then((data) => ({
         status: response.status,
@@ -88,10 +92,6 @@ export default function LoginPage() {
       });
   }
 
-  // For redirecting back to previous page
-  const location = useLocation();
-  const { from } = location.state || { from: { pathname: '/' } };
-
   return user.isAuthenticated ? (
     <Redirect to={from.pathname} />
   ) : (
@@ -102,17 +102,16 @@ export default function LoginPage() {
       <form className="auth_form" method="POST" onSubmit={handleSubmit}>
         <AuthField
           type="text"
-          name="username"
           placeholder="Username"
           onChange={handleUsernameChange}
-          value={username.value}
+          value={username}
           errors={formErrors.username}
         />
         <AuthField
           type="password"
           placeholder="Password"
           onChange={handlePasswordChange}
-          value={password.value}
+          value={password}
           errors={formErrors.password}
         />
         <AuthButton value="CONFIRM" />

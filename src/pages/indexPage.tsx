@@ -1,12 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+
 import GamesImage from 'src/Img/Icons/games.png';
 import JobsImage from 'src/Img/Icons/jobs.png';
 import FreelanceImage from 'src/Img/Icons/freelance.png';
 
-export default function IndexPage(props) {
+export default function IndexPage(): React.ReactElement {
   return (
-    <React.Fragment>
+    <>
       <div className="main_page_first_section wide_section">
         <h1 className="greeting_first">Search in one place</h1>
         <h1 className="greeting_second red">Get results from many</h1>
@@ -24,10 +25,11 @@ export default function IndexPage(props) {
                 <li className="websites_list_item">store.playstation.com</li>
               </ul>
             </li>
-            <li className="features_item"><figure className="figure_two">
-              <img src={JobsImage} height="100px" width="100px" alt="Jobs" />
-              <figcaption><Link className="second_item" to="/jobs">Job offers</Link></figcaption>
-            </figure>
+            <li className="features_item">
+              <figure className="figure_two">
+                <img src={JobsImage} height="100px" width="100px" alt="Jobs" />
+                <figcaption><Link className="second_item" to="/jobs">Job offers</Link></figcaption>
+              </figure>
               <ul className="websites_list">
                 <li className="websites_list_item">www.hh.ua</li>
                 <li className="websites_list_item">www.work.ua</li>
@@ -39,9 +41,11 @@ export default function IndexPage(props) {
                 <li className="websites_list_item">www.novarobota.ua</li>
               </ul>
             </li>
-            <li className="features_item"><figure className="figure_three">
-              <img src={FreelanceImage} height="100px" width="100px" alt="Freelance" />
-              <figcaption><Link className="third_item" to="/">Freelance job offers</Link></figcaption></figure>
+            <li className="features_item">
+              <figure className="figure_three">
+                <img src={FreelanceImage} height="100px" width="100px" alt="Freelance" />
+                <figcaption><Link className="third_item" to="/">Freelance job offers</Link></figcaption>
+              </figure>
               <ul className="websites_list">
                 <li className="websites_list_item">- IN PROGRESS -</li>
               </ul>
@@ -60,9 +64,13 @@ export default function IndexPage(props) {
         </ol>
       </div>
       <div className="main_page_forth_section wide_section">
-        <h1 className="big_text">You don't need to search for the same stuff every time</h1>
-        <h1 className="big_text"><em className="emphasized">Automate it</em> and get notified whenever something new comes up</h1>
+        <h1 className="big_text">You don&apos;t need to search for the same stuff every time</h1>
+        <h1 className="big_text">
+          <em className="emphasized">Automate it</em>
+          {' '}
+          and get notified whenever something new comes up
+        </h1>
       </div>
-    </React.Fragment>
+    </>
   );
 }

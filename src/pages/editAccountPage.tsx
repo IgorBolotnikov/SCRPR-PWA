@@ -1,41 +1,44 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+
 import {
   AuthField,
-  AuthWindow
+  AuthWindow,
 } from 'src/components/authForms';
 import { apiUrl, userUrl } from 'src/constants';
 import useUserStore from 'src/userStore';
 
-export default function EditAccountPage(props) {
+export default function EditAccountPage(): React.ReactElement {
   const user = useUserStore();
-  const [username, setUsername] = useState({value: user.username});
-  const [email, setEmail] = useState({value: user.email});
-  const [image, setImage] = useState({fileString: user.image});
+  const [username, setUsername] = useState(user.username);
+  const [email, setEmail] = useState(user.email);
+  const [image, setImage] = useState(user.image);
   const [formErrors, setFormErrors] = useState({
-    username: [],
-    email: [],
-    image: []
+    username: [] as string[],
+    email: [] as string[],
+    image: [] as string[],
   });
 
-  function handleUsernameChange(event) {
-    setUsername({value: event.target.value});
+  function handleUsernameChange(event: React.ChangeEvent<HTMLInputElement>): void {
+    setUsername({ value: event.target.value });
   }
 
-  function handleEmailChange(event) {
-    setEmail({value: event.target.value});
+  function handleEmailChange(event: React.ChangeEvent<HTMLInputElement>): void {
+    setEmail({ value: event.target.value });
   }
 
-  function handleFileChange(event) {
-    let reader = new FileReader();
-    reader.addEventListener("load", function () {
-      setImage({fileString: reader.result});
+  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>): void {
+    const reader = new FileReader();
+    reader.addEventListener('load', () => {
+      setImage({ fileString: reader.result });
     }, false);
-    reader.readAsDataURL(event.target.files[0]);
+    if (event.target.files) {
+      reader.readAsDataURL(event.target.files[0]);
+    }
   }
 
-  function validateUsername() {
-    let errors = [];
+  function validateUsername(): string[] {
+    const errors = [];
     if (username.value.length > 150) {
       errors.push('Username is too long');
     }
@@ -45,8 +48,8 @@ export default function EditAccountPage(props) {
     return errors;
   }
 
-  function validateEmail() {
-    let errors = [];
+  function validateEmail(): string[] {
+    const errors = [];
     if (!(/\S+@\S+/).test(email.value)) {
       errors.push('Please enter correct email');
     }
@@ -59,7 +62,7 @@ export default function EditAccountPage(props) {
     return errors;
   }
 
-  function validateForm() {
+  function validateForm(): boolean {
     const usernameErrors = validateUsername();
     const emailErrors = validateEmail();
     const usernameValid = usernameErrors.length === 0;
@@ -68,26 +71,12 @@ export default function EditAccountPage(props) {
     setFormErrors({
       username: usernameErrors,
       email: emailErrors,
-      image: []
-    })
+      image: [],
+    });
     return formValid;
   }
 
-  function getRequestBody() {
-    const body = {};
-    if (username.value !== user.username) {
-      body.username = username.value;
-    }
-    if (email.value !== user.email) {
-      body.email = email.value;
-    }
-    if (image.fileString && image.fileString !== user.image) {
-      body.image = image.fileString;
-    }
-    return body;
-  }
-
-  function handleSubmit(event) {
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>): void {
     event.preventDefault();
     const formValid = validateForm();
     if (!formValid) {
@@ -97,28 +86,30 @@ export default function EditAccountPage(props) {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `JWT ${localStorage.getItem('token')}`,
+        Authorization: `JWT ${localStorage.getItem('token')}`,
       },
       body: JSON.stringify({
         username: username.value,
         email: email.value,
-        image: image.value
+        image: image.value,
+      }),
+    })
+      .then((response) => response.json().then((data) => ({ status: response.status, data })))
+      .then((object) => {
+        if (object.status === 200) {
+          localStorage.setItem('token', object.data.token);
+          user.update(object.data);
+        } else if (object.status === 400) {
+          setFormErrors({
+            username: object.data.username || [],
+            email: object.data.email || [],
+            image: object.data.image || [],
+          });
+        }
       })
-    })
-    .then(response => response.json().then(data => ({status: response.status, data: data})))
-    .then(object => {
-      if (object.status === 200) {
-        localStorage.setItem('token', object.data.token);
-        user.update(object.data);
-      } else if (object.status === 400) {
-        setFormErrors({
-          username: object.data.username || [],
-          email: object.data.email || [],
-          image: object.data.image || [],
-        })
-      }
-    })
-    .catch(error => console.error('Error:', error));
+      .catch((error) => {
+        throw new Error(error);
+      });
   }
 
   return (
@@ -133,14 +124,14 @@ export default function EditAccountPage(props) {
       >
         <AuthField
           type="text"
-          maxlength="150"
+          maxLength={150}
           onChange={handleUsernameChange}
           value={username.value}
           errors={formErrors.username}
         />
         <AuthField
           type="email"
-          maxlength="254"
+          maxLength={254}
           onChange={handleEmailChange}
           value={email.value}
           errors={formErrors.email}
@@ -154,12 +145,12 @@ export default function EditAccountPage(props) {
           id="id_image"
           onChange={handleFileChange}
         />
-        {formErrors.image.length !== 0 && formErrors.image.map(error => (
-          <div key={error} class="error_message_container">
-            <span class="error_message">{error}</span>
+        {formErrors.image.length !== 0 && formErrors.image.map((error) => (
+          <div key={error} className="error_message_container">
+            <span className="error_message">{error}</span>
           </div>
         ))}
-        <input type="submit" value="SUBMIT" className="account_button big_button"/>
+        <input type="submit" value="SUBMIT" className="account_button big_button" />
       </form>
       <div className="additional_options">
         <Link className="account_button big_button" to="/auth/change-password">Change Password</Link>

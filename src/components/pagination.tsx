@@ -6,7 +6,7 @@ interface PaginationProps {
   nextPage?: number;
   lastPage: number;
 
-  onPageChange(event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void;
+  onPageChange(page: number): void;
 }
 
 export default function Pagination({
@@ -15,7 +15,7 @@ export default function Pagination({
   nextPage,
   lastPage,
   onPageChange,
-}: PaginationProps) {
+}: PaginationProps): React.ReactElement {
   return (
     <div className="pagination">
       <span className="step-links">
@@ -25,7 +25,7 @@ export default function Pagination({
               <button
                 type="button"
                 className="pagination_button"
-                onClick={onPageChange}
+                onClick={(): void => onPageChange(1)}
                 value={1}
               >
                 1...
@@ -34,7 +34,7 @@ export default function Pagination({
             <button
               type="button"
               className="pagination_button"
-              onClick={onPageChange}
+              onClick={(): void => onPageChange(prevPage)}
               value={prevPage}
             >
               {prevPage}
@@ -47,7 +47,7 @@ export default function Pagination({
             <button
               type="button"
               className="pagination_button"
-              onClick={onPageChange}
+              onClick={(): void => onPageChange(nextPage)}
               value={nextPage}
             >
               {nextPage}
@@ -56,10 +56,11 @@ export default function Pagination({
               <button
                 type="button"
                 className="pagination_button"
-                onClick={onPageChange}
+                onClick={(): void => onPageChange(lastPage)}
                 value={lastPage}
               >
-                ...{lastPage}
+                ...
+                {lastPage}
               </button>
             ) : ('')}
           </>

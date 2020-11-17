@@ -1,29 +1,35 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+
 import { AuthWindow } from 'src/components/authForms';
 import { apiUrl, userUrl } from 'src/constants';
 import useUserStore from 'src/userStore';
 
-export default function DeleteAccountPage(props) {
+export default function DeleteAccountPage(): React.ReactElement {
   const user = useUserStore();
 
-  function handleSubmit(event) {
-    event.prevertDefault();
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>): void {
+    event.preventDefault();
     fetch(apiUrl + userUrl, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `JWT ${localStorage.getItem('token')}`,
+        Authorization: `JWT ${localStorage.getItem('token')}`,
       },
     })
-      .then(response => response.json().then(data => ({status: response.status, data: data})))
-      .then(object => {
+      .then((response) => response.json().then((data) => ({
+        status: response.status,
+        data,
+      })))
+      .then((object) => {
         if (object.status === 200) {
-          localStorage.removeItem('token', object.data.token);
+          localStorage.removeItem('token');
           user.reset();
         }
       })
-      .catch(error => console.error('Error:', error));
+      .catch((error) => {
+        throw new Error(error);
+      });
   }
 
   return (
@@ -33,7 +39,7 @@ export default function DeleteAccountPage(props) {
     >
       <form className="update_form" method="POST" onSubmit={handleSubmit}>
         <div className="button_options">
-          <input type="submit" value="DELETE" className="auth_button danger_button"/>
+          <input type="submit" value="DELETE" className="auth_button danger_button" />
           <Link className="auth_button big_button" to="/auth/edit-account">BACK</Link>
         </div>
       </form>

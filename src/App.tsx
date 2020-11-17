@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import {
   BrowserRouter as Router,
   Switch,
@@ -29,7 +29,7 @@ import Footer from 'src/components/footer';
 import useUserStore from 'src/userStore';
 import { apiUrl, refreshTokenUrl, jwtRefreshTime } from 'src/constants';
 
-function App() {
+function App(): React.ReactNode {
   const user = useUserStore();
   const scheduledCallback = useRef();
 
@@ -37,7 +37,7 @@ function App() {
   // When JWT expires or is not valid => reset all user data to blank values
   // If JWT is successfully refreshed => update user data with
   // received payload and update JWT
-  function refreshToken() {
+  const refreshToken = useCallback((): void => {
     fetch(apiUrl + refreshTokenUrl, {
       method: 'POST',
       headers: {
@@ -61,14 +61,16 @@ function App() {
       .catch((error) => {
         throw new Error(`Error: ${error}`);
       });
-  }
+  }, [user]);
 
   useEffect(() => {
     refreshToken();
+    // @ts-ignore
     scheduledCallback.current = setInterval(refreshToken, jwtRefreshTime);
-    return () => {
-      clearInterval(scheduledCallback);
+    return (): void => {
+      clearInterval(scheduledCallback.current);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

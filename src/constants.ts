@@ -15,6 +15,7 @@ export const resetPasswordValidateUrl = '/password_reset/validate_token/';
 export const rateUrl = '/rate';
 
 export const jobsUrl = '/jobs?';
+export const gamesUrl = '/games?';
 
 export const jwtRefreshTime = 50 * 60 * 1000; // In milliseconds
 

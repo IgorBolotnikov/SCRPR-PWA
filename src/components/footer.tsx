@@ -1,11 +1,11 @@
 import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 
-export default function Footer() {
+export default function Footer(): React.ReactElement {
   const aboutRef = useRef<HTMLAnchorElement>(null);
   const rateRef = useRef<HTMLAnchorElement>(null);
 
-  function toggleBurgerClass() {
+  function toggleBurgerClass(): void {
     if (window.innerWidth < 800) {
       const burger = document.getElementById('burger_click');
       const toggle = document.getElementById('toggle');
@@ -29,7 +29,7 @@ export default function Footer() {
     if (rate) {
       rate.addEventListener('click', toggleBurgerClass);
     }
-    return () => {
+    return (): void => {
       if (about) {
         about.removeEventListener('click', toggleBurgerClass);
       }

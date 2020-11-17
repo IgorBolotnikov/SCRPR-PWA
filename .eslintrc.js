@@ -1,10 +1,11 @@
 module.exports = {
   env: {
     browser: true,
-    es2021: true,
+    es2020: true,
   },
   extends: [
     'plugin:react/recommended',
+    "plugin:react-hooks/recommended",
     'airbnb',
   ],
   parser: '@typescript-eslint/parser',
@@ -35,7 +36,7 @@ module.exports = {
     'max-len': [
       'error',
       {
-        code: 140,
+        code: 90,
         ignorePattern: '^import\\s.+\\sfrom\\s.+;$',
       },
     ],
@@ -96,5 +97,19 @@ module.exports = {
         some: ['nesting', 'id'],
       },
     }],
+
+    '@typescript-eslint/explicit-function-return-type': 'off',
+
+    // Allow props spreading
+    'react/jsx-props-no-spreading': 'off',
   },
+  overrides: [
+    {
+      // enable the rule specifically for TypeScript files
+      files: ['*.ts', '*.tsx'],
+      rules: {
+        '@typescript-eslint/explicit-function-return-type': ['error'],
+      },
+    },
+  ],
 };

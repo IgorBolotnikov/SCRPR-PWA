@@ -1,18 +1,18 @@
 import React, { createContext, useReducer, useContext } from 'react';
 
 const InitialUserStore = {
-  username: "",
-  email: "",
-  image: "",
-  isAuthenticated: false
-}
+  username: '',
+  email: '',
+  image: '',
+  isAuthenticated: false,
+};
 
 const UserContext = createContext(InitialUserStore);
 
 const ACTIONS = {
   UPDATE_USER: 'UPDATE_USER',
-  RESET_USER: 'RESET_USER'
-}
+  RESET_USER: 'RESET_USER',
+};
 
 function UserReducer(state, action) {
   switch (action.type) {
@@ -21,15 +21,15 @@ function UserReducer(state, action) {
         username: action.payload.username,
         email: action.payload.email,
         image: action.payload.image,
-        isAuthenticated: true
+        isAuthenticated: true,
       };
     case ACTIONS.RESET_USER:
-      localStorage.removeItem("token");
+      localStorage.removeItem('token');
       return {
-        username: "",
-        email: "",
-        image: "",
-        isAuthenticated: false
+        username: '',
+        email: '',
+        image: '',
+        isAuthenticated: false,
       };
     default:
       return state;
@@ -37,7 +37,7 @@ function UserReducer(state, action) {
 }
 
 // Global store for accessing and modifying user data
-export function UserStoreProvider({children}) {
+export function UserStoreProvider({ children }) {
   const [state, dispatch] = useReducer(UserReducer, InitialUserStore);
 
   return (
@@ -54,15 +54,15 @@ export default function useUserStore() {
   function update(payload) {
     dispatch({
       type: ACTIONS.UPDATE_USER,
-      payload: payload
-    })
+      payload,
+    });
   }
 
   function reset() {
     dispatch({
       type: ACTIONS.RESET_USER,
-      payload: {}
-    })
+      payload: {},
+    });
   }
 
   return {

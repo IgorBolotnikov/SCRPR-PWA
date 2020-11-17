@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import './index.css';
-import App from './App';
+import App from 'src/App';
 import * as serviceWorker from './serviceWorker';
 // Import global user state provider
 import { UserStoreProvider } from './userStore';

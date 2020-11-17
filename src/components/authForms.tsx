@@ -4,6 +4,7 @@ interface AuthFieldProps {
   type: string;
   errors: string[];
   placeholder?: string;
+  maxLength?: number;
   value: string | number;
 
   onChange(event: React.ChangeEvent<HTMLInputElement>): void;
@@ -14,8 +15,9 @@ export function AuthField({
   type,
   errors,
   placeholder,
+  maxLength,
   onChange,
-}: AuthFieldProps) {
+}: AuthFieldProps): React.ReactElement {
   const classes = errors.length ? 'auth_field field input_error' : 'auth_field field';
   return (
     <>
@@ -23,6 +25,7 @@ export function AuthField({
         type={type}
         className={classes}
         placeholder={placeholder || ''}
+        maxLength={maxLength}
         onChange={onChange}
         value={value}
       />
@@ -35,7 +38,7 @@ interface AuthButtonProps {
   value: number | string;
 }
 
-export function AuthButton({ value }: AuthButtonProps) {
+export function AuthButton({ value }: AuthButtonProps): React.ReactElement {
   return (
     <input
       className="auth_button big_button"
@@ -57,7 +60,7 @@ export function AuthWindow({
   note,
   warning,
   children,
-}: AuthWindowProps) {
+}: AuthWindowProps): React.ReactElement {
   return (
     <div className="auth_container window">
       <h1 className="auth_header">{header}</h1>
@@ -82,7 +85,7 @@ interface FieldErrorsProps {
   errors: string[];
 }
 
-function FieldErrors({ errors }: FieldErrorsProps) {
+function FieldErrors({ errors }: FieldErrorsProps): React.ReactElement {
   return (
     <>
       {errors.map((error) => (

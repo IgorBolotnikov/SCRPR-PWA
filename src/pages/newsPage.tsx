@@ -15,7 +15,7 @@ type News = {
   results: Post[],
 }
 
-export default function NewsPage() {
+export default function NewsPage(): React.ReactElement {
   const [news, setNews] = useState<News>({ pagination: {}, results: [] });
 
   useEffect(() => {

@@ -5,19 +5,19 @@ interface NavbarProps {
   children: React.ReactNode;
 }
 
-export default function Navbar({ children }: NavbarProps) {
+export default function Navbar({ children }: NavbarProps): React.ReactElement {
   const burgerRef = useRef<HTMLLabelElement>(null);
   const toggleRef = useRef<HTMLInputElement>(null);
   const navbarRef = useRef<HTMLUListElement>(null);
 
-  function toggleClass() {
+  function toggleClass(): void {
     const element = document.getElementById('burger_click');
     if (element) {
       element.classList.toggle('change');
     }
   }
 
-  function toggleBurgerClass() {
+  function toggleBurgerClass(): void {
     if (window.innerWidth < 800) {
       if (burgerRef.current) {
         burgerRef.current.classList.remove('change');
@@ -44,7 +44,7 @@ export default function Navbar({ children }: NavbarProps) {
         child.children[0].addEventListener('click', toggleBurgerClass);
       });
     }
-    return () => {
+    return (): void => {
       if (burger) {
         burger.removeEventListener('click', toggleClass);
       }

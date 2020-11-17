@@ -1,4 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+} from 'react';
 
 import Pagination from 'src/components/pagination';
 import {
@@ -9,8 +14,8 @@ import {
 import {
   apiUrl, cities, favoritesUrl, jobsUrl,
 } from 'src/constants';
+import { Page } from 'src/pages/types';
 import useUserStore from 'src/userStore';
-
 
 type Job = {
   source: string;
@@ -25,21 +30,16 @@ type Job = {
   body: string;
 }
 
-type Page = {
-  page: number;
-  prev_page?: number;
-  next_page?: number;
-  last_page: number;
-}
-
 type JobsResponse = {
   results: Job[];
   pagination: Page;
 }
 
-export default function JobsPage() {
+export default function JobsPage(): React.ReactElement {
   const [loading, setLoading] = useState(true);
-  const [jobs, setJobs] = useState<JobsResponse>({ pagination: { page: 1, last_page: 1 }, results: [] });
+  const [jobs, setJobs] = useState<JobsResponse>(
+    { pagination: { page: 1, last_page: 1 }, results: [] },
+  );
   const [title, setTitle] = useState('');
   const [city, setCity] = useState('');
   const [salaryMin, setSalaryMin] = useState(0.00);
@@ -48,7 +48,7 @@ export default function JobsPage() {
   const [page, setPage] = useState(1);
   const user = useUserStore();
 
-  function getQueryString() {
+  const getQueryString = useCallback((): string => {
     const params: Record<string, string | number | boolean> = {};
     if (title) {
       params.title = title;
@@ -72,13 +72,13 @@ export default function JobsPage() {
     return Object.keys(params)
       .map((key) => `${esc(key)}=${esc(params[key])}`)
       .join('&');
-  }
+  }, [city, page, salaryMax, salaryMin, title, withSalary]);
 
-  function fetchJobs() {
-    const URL = apiUrl + jobsUrl + getQueryString();
+  const fetchJobs = useCallback((): void => {
+    const url = apiUrl + jobsUrl + getQueryString();
     window.scrollTo(0, 0);
     setLoading(true);
-    fetch(URL, {
+    fetch(url, {
       headers: {
         'Content-Type': 'application/json',
       },
@@ -88,21 +88,21 @@ export default function JobsPage() {
         setJobs(data || { pagination: {}, results: [] });
         setLoading(false);
       });
+  }, [getQueryString]);
+
+  function handleDiffPage(newPage: number): void {
+    setPage(newPage);
   }
 
-  function handleDiffPage(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-    setPage(Number(event.currentTarget.value));
-  }
-
-  function handleTitleChange(event: React.ChangeEvent<HTMLInputElement>) {
+  function handleTitleChange(event: React.ChangeEvent<HTMLInputElement>): void {
     setTitle(event.target.value);
   }
 
-  function handleCityChange(event: React.ChangeEvent<HTMLSelectElement>) {
+  function handleCityChange(event: React.ChangeEvent<HTMLSelectElement>): void {
     setCity(event.target.value);
   }
 
-  function handleSalaryMinChange(event: React.ChangeEvent<HTMLInputElement>) {
+  function handleSalaryMinChange(event: React.ChangeEvent<HTMLInputElement>): void {
     const value = Number(event.target.value);
     if (value < 0) {
       setSalaryMin(0);
@@ -111,7 +111,7 @@ export default function JobsPage() {
     }
   }
 
-  function handleSalaryMaxChange(event: React.ChangeEvent<HTMLInputElement>) {
+  function handleSalaryMaxChange(event: React.ChangeEvent<HTMLInputElement>): void {
     const value = Number(event.target.value);
     if (value < 0) {
       setSalaryMax(0);
@@ -120,16 +120,16 @@ export default function JobsPage() {
     }
   }
 
-  function handleWithSalaryChange() {
+  function handleWithSalaryChange(): void {
     setWithSalary((prev) => !prev);
   }
 
-  function handleSubmit(event: React.FormEvent) {
+  function handleSubmit(event: React.FormEvent): void {
     event.preventDefault();
     fetchJobs();
   }
 
-  function handleSaveToFavorites(event: React.MouseEvent) {
+  function handleSaveToFavorites(event: React.MouseEvent): void {
     event.preventDefault();
     fetch(`${apiUrl + favoritesUrl}/jobs/`, {
       method: 'POST',
@@ -156,7 +156,7 @@ export default function JobsPage() {
 
   useEffect(() => {
     fetchJobs();
-  }, [page]);
+  }, [page, fetchJobs]);
 
   return (
     <>
@@ -212,17 +212,15 @@ export default function JobsPage() {
       <div className="results_container">
         {loading && <div className="lds-dual-ring" />}
         <JobCardList results={jobs.results} loading={loading} />
-        {
-          jobs.pagination.last_page && jobs.pagination.last_page !== 1 && (
-            <Pagination
-              page={jobs.pagination.page}
-              prevPage={jobs.pagination.prev_page}
-              nextPage={jobs.pagination.next_page}
-              lastPage={jobs.pagination.last_page}
-              onPageChange={handleDiffPage}
-            />
-          )
-        }
+        {jobs.pagination.last_page && jobs.pagination.last_page !== 1 && (
+          <Pagination
+            page={jobs.pagination.page}
+            prevPage={jobs.pagination.prev_page}
+            nextPage={jobs.pagination.next_page}
+            lastPage={jobs.pagination.last_page}
+            onPageChange={handleDiffPage}
+          />
+        )}
       </div>
     </>
   );
@@ -233,7 +231,7 @@ interface JobCardListProps {
   loading: boolean;
 }
 
-function JobCardList({ results, loading }: JobCardListProps) {
+function JobCardList({ results, loading }: JobCardListProps): React.ReactElement {
   return loading ? (
     <ul className="window results_list_jobs loading" />
   ) : (
@@ -251,7 +249,7 @@ interface JobCardProps {
   result: Job;
 }
 
-function JobCard({ result }: JobCardProps) {
+function JobCard({ result }: JobCardProps): React.ReactElement {
   let salaryLine = '';
   if (result.salary_max) {
     salaryLine = `${result.salary_max} ${result.currency}`;
@@ -305,13 +303,17 @@ interface FiltersTabJobsProps {
   onCityChange(event: React.ChangeEvent<HTMLSelectElement>): void;
 }
 
-function FiltersTabJobs({ currentCity, children, onCityChange }: FiltersTabJobsProps) {
+function FiltersTabJobs({
+  currentCity,
+  children,
+  onCityChange,
+}: FiltersTabJobsProps): React.ReactElement {
+  const listRef = useRef<HTMLDivElement>(null);
   const filtersHeader = 'Salary';
 
-  function toggleFilters() {
-    const filtersList = document.getElementById('filters_list');
-    if (filtersList) {
-      filtersList.classList.toggle('filters_open');
+  function toggleFilters(): void {
+    if (listRef.current) {
+      listRef.current.classList.toggle('filters_open');
     }
   }
 
@@ -337,7 +339,10 @@ function FiltersTabJobs({ currentCity, children, onCityChange }: FiltersTabJobsP
           <option value={city.value} key={city.value}>{city.text}</option>
         ))}
       </select>
-      <FiltersList header={filtersHeader}>
+      <FiltersList
+        ref={listRef}
+        header={filtersHeader}
+      >
         {children}
       </FiltersList>
     </div>

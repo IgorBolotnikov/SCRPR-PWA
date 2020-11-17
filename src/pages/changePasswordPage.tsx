@@ -1,64 +1,65 @@
 import React, { useState } from 'react';
+
 import {
   AuthField,
   AuthWindow,
-  AuthButton
+  AuthButton,
 } from 'src/components/authForms';
 import { apiUrl, changePasswordUrl } from 'src/constants';
 
-export default function ChangePasswordPage(props) {
-  const [oldPassword, setOldPassword] = useState({value: ""});
-  const [newPassword, setNewPassword] = useState({value: ""});
-  const [confirmPassword, setConfirmPassword] = useState({value: ""});
+export default function ChangePasswordPage(): React.ReactElement {
+  const [oldPassword, setOldPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [formErrors, setFormErrors] = useState({
-      oldPassword: [],
-      newPassword: [],
-      confirmPassword: []
-    });
+    oldPassword: [] as string[],
+    newPassword: [] as string[],
+    confirmPassword: [] as string[],
+  });
 
-  function handleOldPasswordChange(event) {
-    setOldPassword({value: event.target.value});
+  function handleOldPasswordChange(event: React.ChangeEvent<HTMLInputElement>): void {
+    setOldPassword(event.target.value);
   }
 
-  function handleNewPasswordChange(event) {
-    setNewPassword({value: event.target.value});
+  function handleNewPasswordChange(event: React.ChangeEvent<HTMLInputElement>): void {
+    setNewPassword(event.target.value);
   }
 
-  function handleConfirmPasswordChange(event) {
-    setConfirmPassword({value: event.target.value});
+  function handleConfirmPasswordChange(event: React.ChangeEvent<HTMLInputElement>): void {
+    setConfirmPassword(event.target.value);
   }
 
-  function validateOldPassword() {
-    let errors = [];
-    if (oldPassword.value.length > 0 && oldPassword.value.length < 8) {
+  function validateOldPassword(): string[] {
+    const errors = [];
+    if (oldPassword.length > 0 && oldPassword.length < 8) {
       errors.push('Password is too short');
     }
-    if (oldPassword.value.length === 0) {
+    if (oldPassword.length === 0) {
       errors.push('Password is required');
     }
     return errors;
   }
 
-  function validateNewPassword() {
-    let errors = [];
-    if (newPassword.value.length > 0 && newPassword.value.length < 8) {
+  function validateNewPassword(): string[] {
+    const errors = [];
+    if (newPassword.length > 0 && newPassword.length < 8) {
       errors.push('Password is too short');
     }
-    if (newPassword.value.length === 0) {
+    if (newPassword.length === 0) {
       errors.push('Password is required');
     }
     return errors;
   }
 
-  function validateConfirmPassword() {
-    let errors = []
-    if  (newPassword.value !== confirmPassword.value) {
+  function validateConfirmPassword(): string[] {
+    const errors = [];
+    if (newPassword !== confirmPassword) {
       errors.push('Passwords must match');
     }
     return errors;
   }
 
-  function validateForm() {
+  function validateForm(): boolean {
     const oldPasswordErrors = validateOldPassword();
     const newPasswordErrors = validateNewPassword();
     const confirmPasswordErrors = validateConfirmPassword();
@@ -69,12 +70,12 @@ export default function ChangePasswordPage(props) {
     setFormErrors({
       oldPassword: oldPasswordErrors,
       newPassword: newPasswordErrors,
-      confirmPassword: confirmPasswordErrors
-    })
+      confirmPassword: confirmPasswordErrors,
+    });
     return formValid;
   }
 
-  function handleSubmit(event) {
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>): void {
     event.preventDefault();
     const formValid = validateForm();
     if (!formValid) {
@@ -84,32 +85,31 @@ export default function ChangePasswordPage(props) {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `JWT ${localStorage.getItem('token')}`,
+        Authorization: `JWT ${localStorage.getItem('token')}`,
       },
       body: JSON.stringify({
-        old_password: oldPassword.value,
-        new_password: newPassword.value,
-      })
+        old_password: oldPassword,
+        new_password: newPassword,
+      }),
     })
-      .then(response => {
+      .then((response) => {
         if (response.status === 200) {
-          return {status: response.status, data: null};
-        } else {
-          return response.json().then(data => ({status: response.status, data: data}))};
+          return { status: response.status, data: null };
         }
-      )
-      .then(object => {
-        if (object.status === 200) {
-          
-        } else if (object.status === 400) {
+        return response.json().then((data) => ({ status: response.status, data }));
+      })
+      .then((object) => {
+        if (object.status === 400) {
           setFormErrors({
             oldPassword: object.data.old_password || [],
             newPassword: object.data.new_password || [],
-            confirmPassword: []
-          })
+            confirmPassword: [],
+          });
         }
       })
-      .catch(error => console.error('Error:', error));
+      .catch((error) => {
+        throw new Error(error);
+      });
   }
 
   return (
@@ -122,21 +122,21 @@ export default function ChangePasswordPage(props) {
           type="password"
           placeholder="Old Password"
           onChange={handleOldPasswordChange}
-          value={oldPassword.value}
+          value={oldPassword}
           errors={formErrors.oldPassword}
         />
         <AuthField
           type="password"
           placeholder="New Password"
           onChange={handleNewPasswordChange}
-          value={newPassword.value}
+          value={newPassword}
           errors={formErrors.newPassword}
         />
         <AuthField
           type="password"
           placeholder="Confirm Password"
           onChange={handleConfirmPasswordChange}
-          value={confirmPassword.value}
+          value={confirmPassword}
           errors={formErrors.confirmPassword}
         />
         <AuthButton value="SUBMIT" />

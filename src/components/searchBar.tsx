@@ -15,7 +15,7 @@ export function SearchBarJobs({
   placeholder,
   value,
   onChange,
-}: SearchBarJobsProps) {
+}: SearchBarJobsProps): React.ReactElement {
   return (
     <div className="search_tab">
       <input
@@ -48,7 +48,7 @@ export function SearchBarGames({
   placeholder,
   value,
   onChange,
-}: SearchBarGamesProps) {
+}: SearchBarGamesProps): React.ReactElement {
   return (
     <div className="search_tab">
       <input
@@ -79,7 +79,7 @@ export function CheckBoxFilterField({
   label,
   checked,
   onChange,
-}: CheckBoxFilterFieldProps) {
+}: CheckBoxFilterFieldProps): React.ReactElement {
   return (
     <div className="filter_field">
       <input
@@ -114,7 +114,7 @@ export function NumericFilterField({
   step,
   label,
   onChange,
-}: NumericFilterFieldProps) {
+}: NumericFilterFieldProps): React.ReactElement {
   return (
     <div className="filter_field">
       <label
@@ -140,11 +140,14 @@ interface FiltersListProps {
   children: React.ReactNode;
 }
 
-export function FiltersList({ header, children }: FiltersListProps) {
-  return (
-    <div id="filters_list" className="filters_list window">
-      <h2 className="filter_header">{header}</h2>
-      {children}
-    </div>
-  );
-}
+export const FiltersList = React.forwardRef<HTMLDivElement, FiltersListProps>(
+  (props, ref) => {
+    const { header, children } = props;
+    return (
+      <div ref={ref} id="filters_list" className="filters_list window">
+        <h2 className="filter_header">{header}</h2>
+        {children}
+      </div>
+    );
+  },
+);

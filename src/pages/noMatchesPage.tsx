@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function NoMatchesPage(props) {
+export default function NoMatchesPage(): React.ReactElement {
   return (
     <div className="message_404_container">
       <div className="window">
