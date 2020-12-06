@@ -2,10 +2,13 @@ module.exports = {
   env: {
     browser: true,
     es2020: true,
+    jest: {
+      globals: true,
+    },
   },
   extends: [
     'plugin:react/recommended',
-    "plugin:react-hooks/recommended",
+    'plugin:react-hooks/recommended',
     'airbnb',
   ],
   parser: '@typescript-eslint/parser',
@@ -19,6 +22,7 @@ module.exports = {
   plugins: [
     'react',
     '@typescript-eslint',
+    'react-hooks',
   ],
   settings: {
     'import/resolver': {
@@ -27,6 +31,9 @@ module.exports = {
         paths: ['.'],
       },
     },
+  },
+  globals: {
+    NodeJS: true,
   },
   rules: {
     // Allow .js files to use JSX syntax until project is migrated to TypeScript
@@ -67,17 +74,17 @@ module.exports = {
     ],
 
     // Allow absolute paths
-    'import/no-absolute-path': [2, { commonjs: false, amd: false, esmodule: false }],
+    'import/no-absolute-path': ['error', { commonjs: false, amd: false, esmodule: false }],
 
     // Allow pasting raw HTML
-    'react/no-danger': 0,
+    'react/no-danger': 'off',
 
     // Allow usage of snake_case for API response data
     camelcase: 'off',
 
     // Don't use propTypes
-    'react/prop-types': 0,
-    'react/require-default-props': 0,
+    'react/prop-types': 'off',
+    'react/require-default-props': 'off',
 
     // Remove all false-positives
     'no-unused-vars': 'off',
@@ -102,6 +109,10 @@ module.exports = {
 
     // Allow props spreading
     'react/jsx-props-no-spreading': 'off',
+
+    // React hooks
+    'react-hooks/rules-of-hooks': 'error', // Checks rules of Hooks
+    'react-hooks/exhaustive-deps': 'warn', // Checks effect dependencies
   },
   overrides: [
     {

@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 
 import { AuthButton, AuthField, AuthWindow } from 'src/components/authForms';
 import { apiUrl, createUserUrl } from 'src/constants';
-import useUserStore from 'src/userStore';
+import { updateUser } from 'src/shared/state/user/user.service';
+import { UserContext } from 'src/userStore';
 
 export default function RegisterPage(): React.ReactElement {
   const [username, setUsername] = useState('');
@@ -15,7 +16,7 @@ export default function RegisterPage(): React.ReactElement {
     password: [] as string[],
     confirmPassword: [] as string[],
   });
-  const user = useUserStore();
+  const user = useContext(UserContext);
 
   function handleUsernameChange(event: React.ChangeEvent<HTMLInputElement>): void {
     setUsername(event.target.value);
@@ -86,7 +87,10 @@ export default function RegisterPage(): React.ReactElement {
     const emailValid = emailErrors.length === 0;
     const passwordValid = passwordErrors.length === 0;
     const confirmPasswordValid = confirmPasswordErrors.length === 0;
-    const formValid = usernameValid && emailValid && passwordValid && confirmPasswordValid;
+    const formValid = usernameValid
+      && emailValid
+      && passwordValid
+      && confirmPasswordValid;
     setFormErrors({
       username: usernameErrors,
       email: emailErrors,
@@ -116,7 +120,7 @@ export default function RegisterPage(): React.ReactElement {
       .then((object) => {
         if (object.status === 201) {
           localStorage.setItem('token', object.data.token);
-          user.update(object.data.user);
+          updateUser(object.data.user);
         } else if (object.status === 400) {
           setFormErrors({
             username: object.data.username || [],
@@ -134,7 +138,8 @@ export default function RegisterPage(): React.ReactElement {
   return (
     <AuthWindow
       header="Register"
-      note="This is a universal registration page.<br/>A single account for all my projects."
+      note={'This is a universal registration page.'
+      + '<br/>A single account for all my projects.'}
     >
       <form className="auth_form" method="POST" onSubmit={handleSubmit}>
         <AuthField

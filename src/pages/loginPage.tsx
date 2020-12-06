@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Redirect, useLocation } from 'react-router-dom';
 
 import { AuthButton, AuthField, AuthWindow } from 'src/components/authForms';
 import { apiUrl, getTokenUrl } from 'src/constants';
-import useUserStore from 'src/userStore';
+import { updateUser } from 'src/shared/state/user/user.service';
+import { UserContext } from 'src/userStore';
 
 export default function LoginPage(): React.ReactElement {
   const [username, setUsername] = useState('');
@@ -11,7 +12,7 @@ export default function LoginPage(): React.ReactElement {
   const [formErrors, setFormErrors] = useState<Record<string, string[]>>(
     { username: [], password: [] },
   );
-  const user = useUserStore();
+  const user = useContext(UserContext);
   const location = useLocation<{from: { pathname: string }}>();
   const { from } = location.state || { from: { pathname: '/' } };
 
@@ -75,7 +76,7 @@ export default function LoginPage(): React.ReactElement {
       .then((object) => {
         if (object.status === 200) {
           localStorage.setItem('token', object.data.token);
-          user.update(object.data.user);
+          updateUser(object.data.user);
         } else if (object.status === 400) {
           if (object.data.non_field_errors) {
             setFormErrors({

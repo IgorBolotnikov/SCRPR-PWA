@@ -1,3 +1,4 @@
+import { useObservable } from '@libreact/use-observable';
 import React, {
   useState,
   useEffect,
@@ -14,7 +15,8 @@ import {
 } from 'src/components/searchBar';
 import Pagination from 'src/components/pagination';
 import { Page } from 'src/pages/types';
-import useUserStore from 'src/userStore';
+import { getUser$ } from 'src/shared/state/user/user.query';
+import { anonymousUser } from 'src/shared/state/user/user.store';
 
 type Game = {
   title: string;
@@ -42,11 +44,11 @@ export default function GamesPage(): React.ReactElement {
   const [discountPrice, setDiscountPrice] = useState(false);
   const [free, setFree] = useState(false);
   const [page, setPage] = useState(1);
-  const user = useUserStore();
+  const [user] = useObservable(getUser$, anonymousUser);
 
   const showPagination = games.pagination.last_page && games.pagination.last_page !== 1;
 
-  const getQueryString = useCallback((): string => {
+  const getQueryString = useCallback((resetPage: boolean = false): string => {
     const params: Record<string, string | number | boolean> = {};
     if (title) {
       params.title = title;
@@ -66,7 +68,7 @@ export default function GamesPage(): React.ReactElement {
     if (free) {
       params.free = free;
     }
-    if (page && page !== 1) {
+    if (!resetPage && page && page !== 1) {
       params.page = page;
     }
     const esc = encodeURIComponent;
@@ -75,8 +77,8 @@ export default function GamesPage(): React.ReactElement {
       .join('&');
   }, [PSPlusPrice, discountPrice, free, page, priceMax, priceMin, title]);
 
-  const fetchGames = useCallback((): void => {
-    const url = apiUrl + gamesUrl + getQueryString();
+  function fetchGames(query: string): void {
+    const url = apiUrl + gamesUrl + query;
     window.scrollTo(0, 0);
     setLoading(true);
     fetch(url, {
@@ -89,7 +91,7 @@ export default function GamesPage(): React.ReactElement {
         setGames(data || { pagination: {}, results: [] });
         setLoading(false);
       });
-  }, [getQueryString]);
+  }
 
   function handleDiffPage(newPage: number): void {
     setPage(newPage);
@@ -131,7 +133,7 @@ export default function GamesPage(): React.ReactElement {
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>): void {
     event.preventDefault();
-    fetchGames();
+    fetchGames(getQueryString(true));
   }
 
   function handleSaveToFavorites(
@@ -163,8 +165,8 @@ export default function GamesPage(): React.ReactElement {
   }
 
   useEffect(() => {
-    fetchGames();
-  }, [page, fetchGames]);
+    fetchGames(getQueryString());
+  }, [page]);
 
   return (
     <>
@@ -227,16 +229,21 @@ export default function GamesPage(): React.ReactElement {
       </div>
 
       <div className="results_container">
-        {loading && <div className="lds-dual-ring" />}
-        <GameCardList results={games.results} loading={loading} />
-        {showPagination && (
-          <Pagination
-            page={games.pagination.page}
-            prevPage={games.pagination.prev_page}
-            nextPage={games.pagination.next_page}
-            lastPage={games.pagination.last_page}
-            onPageChange={handleDiffPage}
-          />
+        {loading ? (
+          <div className="lds-dual-ring" />
+        ) : (
+          <>
+            <GameCardList results={games.results} />
+            {showPagination && (
+              <Pagination
+                page={games.pagination.page}
+                prevPage={games.pagination.prev_page}
+                nextPage={games.pagination.next_page}
+                lastPage={games.pagination.last_page}
+                onPageChange={handleDiffPage}
+              />
+            )}
+          </>
         )}
       </div>
     </>
@@ -245,13 +252,10 @@ export default function GamesPage(): React.ReactElement {
 
 interface GameCardListProps {
   results: Game[];
-  loading: boolean;
 }
 
-function GameCardList({ results, loading }: GameCardListProps): React.ReactElement {
-  return loading ? (
-    <ul className="results_list_games loading" />
-  ) : (
+function GameCardList({ results }: GameCardListProps): React.ReactElement {
+  return (
     <ul className="results_list_games">
       {results.length > 0 ? (
         <h1 className="no_results">No results :(</h1>

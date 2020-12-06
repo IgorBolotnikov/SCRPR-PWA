@@ -3,11 +3,9 @@ import { Link } from 'react-router-dom';
 
 import { AuthWindow } from 'src/components/authForms';
 import { apiUrl, userUrl } from 'src/constants';
-import useUserStore from 'src/userStore';
+import { resetUser } from 'src/shared/state/user/user.service';
 
 export default function DeleteAccountPage(): React.ReactElement {
-  const user = useUserStore();
-
   function handleSubmit(event: React.FormEvent<HTMLFormElement>): void {
     event.preventDefault();
     fetch(apiUrl + userUrl, {
@@ -24,7 +22,7 @@ export default function DeleteAccountPage(): React.ReactElement {
       .then((object) => {
         if (object.status === 200) {
           localStorage.removeItem('token');
-          user.reset();
+          resetUser();
         }
       })
       .catch((error) => {
@@ -35,7 +33,8 @@ export default function DeleteAccountPage(): React.ReactElement {
   return (
     <AuthWindow
       header="Delete Account"
-      warning="Are you sure you want to send your account to the infinite void space, from which it can't go back?"
+      warning={'Are you sure you want to send your account to'
+      + ' the infinite void space, from which it can\'t go back?'}
     >
       <form className="update_form" method="POST" onSubmit={handleSubmit}>
         <div className="button_options">

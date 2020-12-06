@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 
 import SideBar from 'src/components/sideBar';
-import useUserStore from 'src/userStore';
-import { apiUrl, favoritesUrl } from 'src/constants';
+import { UserContext } from 'src/userStore';
+import { apiUrl, favoritesUrl, notificationOptions } from 'src/constants';
 
 type FavoritesItem = {
   id: number;
   title: string;
   details: string;
-  notification: string;
+  notification_freq: number;
 };
 
 export default function FavoritesPage(): React.ReactElement {
@@ -17,7 +17,7 @@ export default function FavoritesPage(): React.ReactElement {
   const [favoritesGames, setFavoritesGames] = useState({ pagination: [], results: [] });
   const [loadingJobs, setLoadingJobs] = useState({ value: false });
   const [favoritesJobs, setFavoritesJobs] = useState({ pagination: [], results: [] });
-  const user = useUserStore();
+  const user = useContext(UserContext);
 
   const showGames = favoritesGames.results.length !== 0;
   const showJobs = favoritesJobs.results.length !== 0;
@@ -88,7 +88,7 @@ export default function FavoritesPage(): React.ReactElement {
                 link={`games/${item.id}`}
                 title={item.title}
                 additionalInfo={item.details}
-                notificationFrequency={item.notification}
+                notificationFrequency={item.notification_freq}
               />
             )) : (<h3 className="no_favorites_header">No Favorites yet</h3>)}
           </FavoritesList>
@@ -107,7 +107,7 @@ export default function FavoritesPage(): React.ReactElement {
                 link={`jobs/${item.id}`}
                 title={item.title}
                 additionalInfo={item.details}
-                notificationFrequency={item.notification}
+                notificationFrequency={item.notification_freq}
               />
             )) : (<h3 className="no_favorites_header">No Favorites yet</h3>)}
           </FavoritesList>
@@ -121,7 +121,7 @@ interface FavoritesEntryProps {
   link: string;
   title: string;
   additionalInfo: string;
-  notificationFrequency: string;
+  notificationFrequency: number;
 }
 
 function FavoritesEntry({
@@ -130,6 +130,7 @@ function FavoritesEntry({
   additionalInfo,
   notificationFrequency,
 }: FavoritesEntryProps): React.ReactElement {
+  const notificationLabel = notificationOptions[notificationFrequency] || 'Never';
   return (
     <Link to={`/favorites/${link}`}>
       <li className="favorites_list_item">
@@ -143,7 +144,7 @@ function FavoritesEntry({
           }
         </div>
         <div className="favorites_list_item_notifications">
-          {notificationFrequency}
+          Notify me: {notificationLabel}
         </div>
       </li>
     </Link>

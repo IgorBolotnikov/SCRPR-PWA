@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Route, Redirect } from 'react-router-dom';
 
-import useUserStore from './userStore';
+import { UserContext } from 'src/userStore';
 
 interface PrivateRouteProps {
   children: React.ReactNode;
+
   [key: string]: unknown;
 }
 
@@ -14,7 +15,9 @@ export default function PrivateRoute({
   children,
   ...rest
 }: PrivateRouteProps): React.ReactElement {
-  const user = useUserStore();
+  const user = useContext(UserContext);
+
+  console.log(user);
 
   return (
     <Route

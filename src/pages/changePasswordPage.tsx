@@ -115,7 +115,8 @@ export default function ChangePasswordPage(): React.ReactElement {
   return (
     <AuthWindow
       header="Change Password"
-      note="Please enter the new password.<br/>It should (ideally) differ from the previous one."
+      note={'Please enter the new password.'
+      + '<br/>It should (ideally) differ from the previous one.'}
     >
       <form className="auth_form" method="POST" onSubmit={handleSubmit}>
         <AuthField

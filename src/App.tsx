@@ -1,4 +1,9 @@
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, {
+  MutableRefObject,
+  useContext,
+  useEffect,
+  useRef,
+} from 'react';
 import {
   BrowserRouter as Router,
   Switch,
@@ -26,133 +31,104 @@ import FavoritesJobsEditPage from 'src/pages/favoritesJobsEditPage';
 import NoMatchesPage from 'src/pages/noMatchesPage';
 import Navbar from 'src/components/navbar';
 import Footer from 'src/components/footer';
-import useUserStore from 'src/userStore';
-import { apiUrl, refreshTokenUrl, jwtRefreshTime } from 'src/constants';
+import { refreshToken } from 'src/shared/state/user/user.data-service';
+import { jwtRefreshTime } from 'src/constants';
+import { resetUser } from 'src/shared/state/user/user.service';
+import { UserContext, UserContextProvider } from 'src/userStore';
 
 function App(): React.ReactNode {
-  const user = useUserStore();
-  const scheduledCallback = useRef();
-
-  // Callback for scheduled JWT refreshment
-  // When JWT expires or is not valid => reset all user data to blank values
-  // If JWT is successfully refreshed => update user data with
-  // received payload and update JWT
-  const refreshToken = useCallback((): void => {
-    fetch(apiUrl + refreshTokenUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ token: localStorage.getItem('token') }),
-    })
-      .then((response) => response.json().then((data) => ({
-        status: response.status,
-        data,
-      })))
-      .then((object) => {
-        if (object.status === 200) {
-          localStorage.setItem('token', object.data.token);
-          user.update(object.data.user);
-        } else if (object.status === 400) {
-          localStorage.removeItem('token');
-          user.reset();
-        }
-      })
-      .catch((error) => {
-        throw new Error(`Error: ${error}`);
-      });
-  }, [user]);
+  const user = useContext(UserContext);
+  const scheduledCallback = useRef<NodeJS.Timeout>() as MutableRefObject<NodeJS.Timeout>;
+  console.log(user);
 
   useEffect(() => {
     refreshToken();
-    // @ts-ignore
     scheduledCallback.current = setInterval(refreshToken, jwtRefreshTime);
-    return (): void => {
-      clearInterval(scheduledCallback.current);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    return (): void => clearInterval(scheduledCallback.current);
   }, []);
 
   return (
     <Router>
-      <Navbar>
-        <li><Link className="navbutton" to="/news">News</Link></li>
-        <li><Link className="navbutton first_item" to="/games">Games</Link></li>
-        <li><Link className="navbutton second_item" to="/jobs">Jobs</Link></li>
-        <li><Link className="navbutton third_item" to="/freelance">Freelance</Link></li>
-        {user.isAuthenticated ? (
-          <>
-            <li><Link className="navbutton" to="/favorites">My Account</Link></li>
-            <li>
-              <Link className="navbutton" to="/" onClick={user.reset}>Log Out</Link>
-            </li>
-          </>
-        ) : (
-          <>
-            <li><Link className="navbutton" to="/auth/login">Log In</Link></li>
-            <li><Link className="navbutton" to="/auth/register">Register</Link></li>
-          </>
-        )}
-      </Navbar>
-      <div className="content_container">
-        <Switch>
-          <Route path="/" exact>
-            <IndexPage />
-          </Route>
-          <Route path="/news">
-            <NewsPage />
-          </Route>
-          <Route path="/jobs">
-            <JobsPage />
-          </Route>
-          <Route path="/games">
-            <GamesPage />
-          </Route>
-          <Route path="/freelance">
-            <IndexPage />
-          </Route>
-          <Route path="/auth/login">
-            <LoginPage />
-          </Route>
-          <Route path="/auth/register">
-            <RegisterPage />
-          </Route>
-          <Route path="/auth/reset-password" exact>
-            <ResetRequest />
-          </Route>
-          <Route path="/auth/reset-password/:token">
-            <ResetPassword />
-          </Route>
-          <PrivateRoute path="/auth/edit-account">
-            <EditAccountPage />
-          </PrivateRoute>
-          <PrivateRoute path="/auth/change-password">
-            <ChangePasswordPage />
-          </PrivateRoute>
-          <PrivateRoute path="/auth/delete-account">
-            <DeleteAccountPage />
-          </PrivateRoute>
-          <Route path="/about">
-            <AboutPage />
-          </Route>
-          <Route path="/rate">
-            <RatePage />
-          </Route>
-          <PrivateRoute path="/favorites" exact>
-            <FavoritesPage />
-          </PrivateRoute>
-          <PrivateRoute path="/favorites/games/:id">
-            <FavoritesGamesEditPage />
-          </PrivateRoute>
-          <PrivateRoute path="/favorites/jobs/:id">
-            <FavoritesJobsEditPage />
-          </PrivateRoute>
-          <Route path="*">
-            <NoMatchesPage />
-          </Route>
-        </Switch>
-      </div>
-      <Footer />
+      <UserContextProvider value={user}>
+        <Navbar>
+          <li><Link className="navbutton" to="/news">News</Link></li>
+          <li><Link className="navbutton first_item" to="/games">Games</Link></li>
+          <li><Link className="navbutton second_item" to="/jobs">Jobs</Link></li>
+          <li><Link className="navbutton third_item" to="/freelance">Freelance</Link></li>
+          {user.isAuthenticated ? (
+            <>
+              <li><Link className="navbutton" to="/favorites">My Account</Link></li>
+              <li>
+                <Link className="navbutton" to="/" onClick={resetUser}>Log Out</Link>
+              </li>
+            </>
+          ) : (
+            <>
+              <li><Link className="navbutton" to="/auth/login">Log In</Link></li>
+              <li><Link className="navbutton" to="/auth/register">Register</Link></li>
+            </>
+          )}
+        </Navbar>
+        <div className="content_container">
+          <Switch>
+            <Route path="/" exact>
+              <IndexPage />
+            </Route>
+            <Route path="/news">
+              <NewsPage />
+            </Route>
+            <Route path="/jobs">
+              <JobsPage />
+            </Route>
+            <Route path="/games">
+              <GamesPage />
+            </Route>
+            <Route path="/freelance">
+              <IndexPage />
+            </Route>
+            <Route path="/auth/login">
+              <LoginPage />
+            </Route>
+            <Route path="/auth/register">
+              <RegisterPage />
+            </Route>
+            <Route path="/auth/reset-password" exact>
+              <ResetRequest />
+            </Route>
+            <Route path="/auth/reset-password/:token">
+              <ResetPassword />
+            </Route>
+            <PrivateRoute path="/auth/edit-account">
+              <EditAccountPage />
+            </PrivateRoute>
+            <PrivateRoute path="/auth/change-password">
+              <ChangePasswordPage />
+            </PrivateRoute>
+            <PrivateRoute path="/auth/delete-account">
+              <DeleteAccountPage />
+            </PrivateRoute>
+            <Route path="/about">
+              <AboutPage />
+            </Route>
+            <Route path="/rate">
+              <RatePage />
+            </Route>
+            <PrivateRoute path="/favorites" exact>
+              <FavoritesPage />
+            </PrivateRoute>
+            <PrivateRoute path="/favorites/games/:id">
+              <FavoritesGamesEditPage />
+            </PrivateRoute>
+            <PrivateRoute path="/favorites/jobs/:id">
+              <FavoritesJobsEditPage />
+            </PrivateRoute>
+            <Route path="*">
+              <NoMatchesPage />
+            </Route>
+          </Switch>
+        </div>
+        <Footer />
+      </UserContextProvider>
     </Router>
   );
 }

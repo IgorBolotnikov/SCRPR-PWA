@@ -1,18 +1,24 @@
+import { useObservable } from '@libreact/use-observable';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
 import './index.css';
 import App from 'src/App';
+import { getUser$ } from 'src/shared/state/user/user.query';
+import { anonymousUser } from 'src/shared/state/user/user.store';
+
 import * as serviceWorker from './serviceWorker';
 // Import global user state provider
-import { UserStoreProvider } from './userStore';
+import { UserContextProvider } from './userStore';
 
 // Wrap the whole app so that user data can be used everywhere
 function WrappedApp() {
+  const [user] = useObservable(getUser$, anonymousUser);
+
   return (
-    <UserStoreProvider>
+    <UserContextProvider value={user}>
       <App />
-    </UserStoreProvider>
+    </UserContextProvider>
   );
 }
 

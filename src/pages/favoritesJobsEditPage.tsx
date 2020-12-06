@@ -1,4 +1,9 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useContext,
+} from 'react';
 import { Link, useParams } from 'react-router-dom';
 
 import SideBar from 'src/components/sideBar';
@@ -12,11 +17,11 @@ import {
   favoritesUrl,
   cities,
 } from 'src/constants';
-import useUserStore from 'src/userStore';
+import { UserContext } from 'src/userStore';
 
 export default function FavoritesJobsEditPage(): React.ReactElement {
   const { id } = useParams();
-  const user = useUserStore();
+  const user = useContext(UserContext);
   const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState('');
   const [city, setCity] = useState('');
@@ -56,7 +61,7 @@ export default function FavoritesJobsEditPage(): React.ReactElement {
   }
 
   function handleNotificationChange(event: React.ChangeEvent<HTMLSelectElement>): void {
-    setNotification(Number(event.target));
+    setNotification(Number(event.target.value));
   }
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>): void {
@@ -204,7 +209,7 @@ export default function FavoritesJobsEditPage(): React.ReactElement {
                 <select
                   className="field city_filter city_separate"
                   id="notification_freq"
-                  value={notification}
+                  value={String(notification)}
                   onChange={handleNotificationChange}
                 >
                   {Object.entries(notificationOptions).map(([key, value]) => (

@@ -1,3 +1,4 @@
+import { useObservable } from '@libreact/use-observable';
 import React, {
   useState,
   useEffect,
@@ -15,7 +16,8 @@ import {
   apiUrl, cities, favoritesUrl, jobsUrl,
 } from 'src/constants';
 import { Page } from 'src/pages/types';
-import useUserStore from 'src/userStore';
+import { getUser$ } from 'src/shared/state/user/user.query';
+import { anonymousUser } from 'src/shared/state/user/user.store';
 
 type Job = {
   source: string;
@@ -46,9 +48,9 @@ export default function JobsPage(): React.ReactElement {
   const [salaryMax, setSalaryMax] = useState(0.00);
   const [withSalary, setWithSalary] = useState(false);
   const [page, setPage] = useState(1);
-  const user = useUserStore();
+  const [user] = useObservable(getUser$, anonymousUser);
 
-  const getQueryString = useCallback((): string => {
+  const getQueryString = useCallback((resetPage: boolean = false): string => {
     const params: Record<string, string | number | boolean> = {};
     if (title) {
       params.title = title;
@@ -65,7 +67,7 @@ export default function JobsPage(): React.ReactElement {
     if (withSalary) {
       params.with_salary = withSalary;
     }
-    if (page && page !== 1) {
+    if (!resetPage && page && page !== 1) {
       params.page = page;
     }
     const esc = encodeURIComponent;
@@ -74,8 +76,8 @@ export default function JobsPage(): React.ReactElement {
       .join('&');
   }, [city, page, salaryMax, salaryMin, title, withSalary]);
 
-  const fetchJobs = useCallback((): void => {
-    const url = apiUrl + jobsUrl + getQueryString();
+  function fetchJobs(query: string): void {
+    const url = apiUrl + jobsUrl + query;
     window.scrollTo(0, 0);
     setLoading(true);
     fetch(url, {
@@ -88,7 +90,7 @@ export default function JobsPage(): React.ReactElement {
         setJobs(data || { pagination: {}, results: [] });
         setLoading(false);
       });
-  }, [getQueryString]);
+  }
 
   function handleDiffPage(newPage: number): void {
     setPage(newPage);
@@ -125,8 +127,9 @@ export default function JobsPage(): React.ReactElement {
   }
 
   function handleSubmit(event: React.FormEvent): void {
+    console.log('handleSubmit');
     event.preventDefault();
-    fetchJobs();
+    fetchJobs(getQueryString(true));
   }
 
   function handleSaveToFavorites(event: React.MouseEvent): void {
@@ -155,8 +158,12 @@ export default function JobsPage(): React.ReactElement {
   }
 
   useEffect(() => {
-    fetchJobs();
-  }, [page, fetchJobs]);
+    fetchJobs(getQueryString());
+  }, [page]);
+
+  const canShowPagination = !loading
+    && jobs.pagination.last_page
+    && jobs.pagination.last_page !== 1;
 
   return (
     <>
@@ -210,16 +217,21 @@ export default function JobsPage(): React.ReactElement {
       </div>
 
       <div className="results_container">
-        {loading && <div className="lds-dual-ring" />}
-        <JobCardList results={jobs.results} loading={loading} />
-        {jobs.pagination.last_page && jobs.pagination.last_page !== 1 && (
-          <Pagination
-            page={jobs.pagination.page}
-            prevPage={jobs.pagination.prev_page}
-            nextPage={jobs.pagination.next_page}
-            lastPage={jobs.pagination.last_page}
-            onPageChange={handleDiffPage}
-          />
+        {loading ? (
+          <div className="lds-dual-ring" />
+        ) : (
+          <>
+            <JobCardList results={jobs.results} />
+            {canShowPagination && (
+              <Pagination
+                page={jobs.pagination.page}
+                prevPage={jobs.pagination.prev_page}
+                nextPage={jobs.pagination.next_page}
+                lastPage={jobs.pagination.last_page}
+                onPageChange={handleDiffPage}
+              />
+            )}
+          </>
         )}
       </div>
     </>
@@ -228,13 +240,10 @@ export default function JobsPage(): React.ReactElement {
 
 interface JobCardListProps {
   results: Job[];
-  loading: boolean;
 }
 
-function JobCardList({ results, loading }: JobCardListProps): React.ReactElement {
-  return loading ? (
-    <ul className="window results_list_jobs loading" />
-  ) : (
+function JobCardList({ results }: JobCardListProps): React.ReactElement {
+  return (
     <ul className="window results_list_jobs">
       {results.length === 0 ? (
         <h1 className="no_results">No results :(</h1>

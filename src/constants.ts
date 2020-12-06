@@ -19,7 +19,7 @@ export const gamesUrl = '/games?';
 
 export const jwtRefreshTime = 50 * 60 * 1000; // In milliseconds
 
-export const notificationOptions = {
+export const notificationOptions: { [key: number]: string } = {
   0: 'Never',
   1: 'Daily',
   7: 'Weekly',
