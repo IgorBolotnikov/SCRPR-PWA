@@ -1,74 +1,14 @@
-import React, { createContext, useReducer, useContext } from 'react';
+import React, { createContext } from 'react';
 
-const UserContext = createContext();
+import { anonymousUser } from 'src/shared/state/user/user.store';
 
-const InitialUserStore = {
-  username: "",
-  email: "",
-  image: "",
-  isAuthenticated: false
-}
+export const UserContext = createContext(anonymousUser);
 
-const ACTIONS = {
-  UPDATE_USER: 'UPDATE_USER',
-  RESET_USER: 'RESET_USER'
-}
-
-function UserReducer(state, action) {
-  switch (action.type) {
-    case ACTIONS.UPDATE_USER:
-      console.log(action.payload);
-      return {
-        username: action.payload.username,
-        email: action.payload.email,
-        image: action.payload.image,
-        isAuthenticated: true
-      };
-    case ACTIONS.RESET_USER:
-      localStorage.removeItem("token");
-      return {
-        username: "",
-        email: "",
-        image: "",
-        isAuthenticated: false
-      };
-    default:
-      return state;
-  }
-}
-
-// Global store for accessing and modifying user data
-export function UserStoreProvider({children}) {
-  const [state, dispatch] = useReducer(UserReducer, InitialUserStore);
-
+// Global context for accessing user data
+export function UserContextProvider({ children, value }) {
   return (
-    <UserContext.Provider value={[state, dispatch]}>
+    <UserContext.Provider value={value}>
       {children}
     </UserContext.Provider>
   );
-}
-
-// Custom hook to allow direct user data manipulation
-export default function useUserStore() {
-  const [state, dispatch] = useContext(UserContext);
-
-  function update(payload) {
-    dispatch({
-      type: ACTIONS.UPDATE_USER,
-      payload: payload
-    })
-  }
-
-  function reset() {
-    dispatch({
-      type: ACTIONS.RESET_USER,
-      payload: {}
-    })
-  }
-
-  return {
-    ...state,
-    update,
-    reset,
-  };
 }
