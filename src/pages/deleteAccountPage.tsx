@@ -15,12 +15,8 @@ export default function DeleteAccountPage(): React.ReactElement {
         Authorization: `JWT ${localStorage.getItem('token')}`,
       },
     })
-      .then((response) => response.json().then((data) => ({
-        status: response.status,
-        data,
-      })))
-      .then((object) => {
-        if (object.status === 200) {
+      .then((response) => {
+        if (response.status === 200) {
           localStorage.removeItem('token');
           resetUser();
         }

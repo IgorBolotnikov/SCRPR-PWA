@@ -1,4 +1,5 @@
 import React, { useContext, useState } from 'react';
+import { Redirect, useLocation } from 'react-router-dom';
 
 import { AuthButton, AuthField, AuthWindow } from 'src/components/authForms';
 import { apiUrl, createUserUrl } from 'src/constants';
@@ -17,6 +18,8 @@ export default function RegisterPage(): React.ReactElement {
     confirmPassword: [] as string[],
   });
   const user = useContext(UserContext);
+  const location = useLocation<{ from: { pathname: string } }>();
+  const { from } = location.state || { from: { pathname: '/' } };
 
   function handleUsernameChange(event: React.ChangeEvent<HTMLInputElement>): void {
     setUsername(event.target.value);
@@ -135,7 +138,9 @@ export default function RegisterPage(): React.ReactElement {
       });
   }
 
-  return (
+  return user.isAuthenticated ? (
+    <Redirect to={from.pathname} />
+  ) : (
     <AuthWindow
       header="Register"
       note={'This is a universal registration page.'

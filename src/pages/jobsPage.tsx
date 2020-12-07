@@ -127,7 +127,6 @@ export default function JobsPage(): React.ReactElement {
   }
 
   function handleSubmit(event: React.FormEvent): void {
-    console.log('handleSubmit');
     event.preventDefault();
     fetchJobs(getQueryString(true));
   }
