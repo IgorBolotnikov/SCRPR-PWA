@@ -39,7 +39,6 @@ import { UserContext, UserContextProvider } from 'src/userStore';
 function App(): React.ReactNode {
   const user = useContext(UserContext);
   const scheduledCallback = useRef<NodeJS.Timeout>() as MutableRefObject<NodeJS.Timeout>;
-  console.log(user);
 
   useEffect(() => {
     refreshToken();

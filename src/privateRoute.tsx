@@ -17,8 +17,6 @@ export default function PrivateRoute({
 }: PrivateRouteProps): React.ReactElement {
   const user = useContext(UserContext);
 
-  console.log(user);
-
   return (
     <Route
       {...rest}
