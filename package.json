@@ -3,7 +3,7 @@
   "version": "1.1.0",
   "private": true,
   "dependencies": {
-    "@datorama/akita": "^5.3.0",
+    "@datorama/akita": "^8.0.1",
     "@libreact/use-observable": "^1.0.0",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
@@ -22,7 +22,7 @@
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "^3.4.4",
+    "react-scripts": "^5.0.1",
     "typescript": "^3.9.7"
   },
   "scripts": {
